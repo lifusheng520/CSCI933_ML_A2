@@ -34,36 +34,37 @@ def _get_text(record: Record) -> str:
     return " ".join(parts).strip()
 
 
-def create_chunks(records: List[Record]) -> List[Chunk]:
+def create_chunks(records):
     """
-    Convert structured records into retrieval chunks.
-
-    This is intentionally simple. Students should consider whether a different strategy
-    is better, such as:
-    - scene-level chunks;
-    - speaker-turn chunks;
-    - overlapping fixed-size chunks;
-    - summary-enhanced chunks.
+    Starter function — now adapted for already chunked data
     """
-    chunks: List[Chunk] = []
+    chunks = []
 
-    for i, record in enumerate(records):
-        text = _get_text(record)
-        if not text:
-            continue
-
+    for r in records:
         chunk = {
-            "chunk_id": record.get("source_id") or record.get("id") or f"chunk_{i:06d}",
-            "play": record.get("play", record.get("play_key", "unknown")),
-            "act": record.get("act", None),
-            "scene": record.get("scene", None),
-            "speaker": record.get("speaker", None),
-            "text": text,
-            "metadata": record,
+            "chunk_id": r["chunk_id"],
+            "text": enrich_text(r),
+            "play": r["play"],
+            "act": r["act"],
+            "scene": r["scene"],
+            "speaker": r["speaker"]
         }
         chunks.append(chunk)
 
     return chunks
+
+
+def enrich_text(record):
+    """
+    Improve retrieval quality using metadata
+    """
+    text = record["text"]
+
+    # Add scene summary if available
+    if "scene_summary" in record and record["scene_summary"]:
+        text = record["scene_summary"] + " " + text
+
+    return text
 
 
 def format_chunk_for_display(chunk: Chunk) -> str:

@@ -77,6 +77,26 @@ def load_all_plays() -> List[Record]:
 
     return all_records
 
+def load_jsonl(file_path):
+    records = []
+    with open(file_path, "r", encoding="utf-8") as f:
+        for line in f:
+            records.append(json.loads(line))
+    return records
+
+
+def load_dataset(file_list):
+    """
+    Load all processed chunk files
+    """
+    all_records = []
+
+    for path in file_list:
+        records = load_jsonl(path)
+        all_records.extend(records)
+
+    return all_records
+
 
 if __name__ == "__main__":
     records = load_all_plays()
