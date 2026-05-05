@@ -76,6 +76,44 @@ def generate_answer(prompt: str) -> str:
     )
 
 
+def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieved: List[Tuple[Chunk, float]]) -> None:
+    # set up records structure
+    current_entry = {
+        "query": query,
+        "answer": answer,
+        "retrieved_evidence": []
+    }
+
+    print("\nRetrieved evidence:")
+    for rank, (chunk, score) in enumerate(retrieved, start=1):
+        print("-" * 80)
+        print(f"Rank {rank} | Score: {score:.4f}")
+        print(format_chunk_for_display(chunk))
+
+        # construct json records
+        evidence_item = {
+            "rank": rank,
+            "score": round(float(score), 4),
+            "chunk_id": chunk["chunk_id"],
+            "text": chunk["text"],
+            "play": chunk["play"],
+            "act": chunk["act"],
+            "scene": chunk["scene"],
+            "speaker": chunk["speaker"]
+        }
+        current_entry["retrieved_evidence"].append(evidence_item)
+
+    # save records into history
+    history.append(current_entry)
+
+
+def save_history(history: List[Dict], output_file: Any) -> None:
+    # save all the records before quit or exit
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(history, f, indent=2, ensure_ascii=False)
+    print(f"All records has been saved as {output_file}")
+
+
 def main() -> None:
     records = load_all_plays()
     chunks = create_chunks(records)
@@ -96,44 +134,14 @@ def main() -> None:
     while True:
         query = input("Question: ").strip()
         if query.lower() in {"quit", "exit"}:
-            # save all the records before quit or exit
-            with open(OUTPUT_LOG_FILE, 'w', encoding='utf-8') as f:
-                json.dump(q_and_a_history, f, indent=2, ensure_ascii=False)
-            print(f"All records has been saved as {OUTPUT_LOG_FILE}")
+            save_history(q_and_a_history, OUTPUT_LOG_FILE)
             break
 
         retrieved = retriever.retrieve(query, top_k=DEFAULT_TOP_K)
         prompt = build_rag_prompt(query, retrieved)
         answer = generate_answer(prompt)
 
-        # set up records structure
-        current_entry = {
-            "query": query,
-            "answer": answer,
-            "retrieved_evidence": []
-        }
-
-        print("\nRetrieved evidence:")
-        for rank, (chunk, score) in enumerate(retrieved, start=1):
-            print("-" * 80)
-            print(f"Rank {rank} | Score: {score:.4f}")
-            print(format_chunk_for_display(chunk))
-
-            # construct json records
-            evidence_item = {
-                "rank": rank,
-                "score": round(float(score), 4),
-                "chunk_id": chunk["chunk_id"],
-                "text": chunk["text"],
-                "play": chunk["play"],
-                "act": chunk["act"],
-                "scene": chunk["scene"],
-                "speaker": chunk["speaker"]
-            }
-            current_entry["retrieved_evidence"].append(evidence_item)
-
-        # save records into history
-        q_and_a_history.append(current_entry)
+        log_retrieval_results(q_and_a_history, query, answer, retrieved)
 
         print("\nGenerated answer:")
         print(answer)
