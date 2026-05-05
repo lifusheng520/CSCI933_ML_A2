@@ -12,13 +12,16 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Tuple
 
-from config import DEFAULT_TOP_K, EMBEDDING_MODEL_NAME, PROMPT_DIR
+from config import DEFAULT_TOP_K, EMBEDDING_MODEL_NAME, PROMPT_DIR, RESULTS_DIR
 from data_loader import load_all_plays
 from chunking import create_chunks, format_chunk_for_display
 from retrieval import EmbeddingRetriever
 
+import json
+
 
 Chunk = Dict[str, Any]
+ANSWERS_DIR = RESULTS_DIR / "answers"
 
 
 def load_system_prompt() -> str:
@@ -80,23 +83,57 @@ def main() -> None:
     retriever = EmbeddingRetriever(EMBEDDING_MODEL_NAME)
     retriever.build_index(chunks)
 
+    # make sure answers directory exists
+    ANSWERS_DIR.mkdir(exist_ok=True)
+
+    # define output file name
+    OUTPUT_LOG_FILE = ANSWERS_DIR / "retrieval_history.json"
+    q_and_a_history = []
+
     print("Shakespeare-aware RAG chatbot scaffold.")
     print("Type 'quit' to exit.\n")
 
     while True:
         query = input("Question: ").strip()
         if query.lower() in {"quit", "exit"}:
+            # save all the records before quit or exit
+            with open(OUTPUT_LOG_FILE, 'w', encoding='utf-8') as f:
+                json.dump(q_and_a_history, f, indent=2, ensure_ascii=False)
+            print(f"All records has been saved as {OUTPUT_LOG_FILE}")
             break
 
         retrieved = retriever.retrieve(query, top_k=DEFAULT_TOP_K)
         prompt = build_rag_prompt(query, retrieved)
         answer = generate_answer(prompt)
 
+        # set up records structure
+        current_entry = {
+            "query": query,
+            "answer": answer,
+            "retrieved_evidence": []
+        }
+
         print("\nRetrieved evidence:")
         for rank, (chunk, score) in enumerate(retrieved, start=1):
             print("-" * 80)
             print(f"Rank {rank} | Score: {score:.4f}")
             print(format_chunk_for_display(chunk))
+
+            # construct json records
+            evidence_item = {
+                "rank": rank,
+                "score": round(float(score), 4),
+                "chunk_id": chunk["chunk_id"],
+                "text": chunk["text"],
+                "play": chunk["play"],
+                "act": chunk["act"],
+                "scene": chunk["scene"],
+                "speaker": chunk["speaker"]
+            }
+            current_entry["retrieved_evidence"].append(evidence_item)
+
+        # save records into history
+        q_and_a_history.append(current_entry)
 
         print("\nGenerated answer:")
         print(answer)
