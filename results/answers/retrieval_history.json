@@ -1,0 +1,182 @@
+[
+  {
+    "query": "Why does Macbeth kill Duncan?",
+    "answer": "[PLACEHOLDER ANSWER]\nConnect this function to your selected language model or API. Your final answer should use the retrieved context and should not invent unsupported details.",
+    "retrieved_evidence": [
+      {
+        "rank": 1,
+        "score": 0.7858,
+        "chunk_id": "macbeth_2_2_0026",
+        "text": "Macbeth murders Duncan, and the couple reacts to guilt and fear. Who was it that thus cried? Why, worthy Thane, You do unbend your noble strength, to think So brainsickly of things. Go, get some water And wash this filthy witness from your hand. Why did you bring these daggers from the place? They must lie there. Go carry them, and smear The sleepy grooms with blood. Duncan murder blood",
+        "play": "Macbeth",
+        "act": 2,
+        "scene": 2,
+        "speaker": "LADY MACBETH"
+      },
+      {
+        "rank": 2,
+        "score": 0.773,
+        "chunk_id": "macbeth_2_2_0029",
+        "text": "Macbeth murders Duncan, and the couple reacts to guilt and fear. Whence is that knocking? How is't with me, when every noise appals me? What hands are here? Ha, they pluck out mine eyes! Will all great Neptune's ocean wash this blood Clean from my hand? No, this my hand will rather The multitudinous seas incarnadine, Making the green one red. Duncan murder blood",
+        "play": "Macbeth",
+        "act": 2,
+        "scene": 2,
+        "speaker": "MACBETH"
+      },
+      {
+        "rank": 3,
+        "score": 0.7705,
+        "chunk_id": "macbeth_2_2_0009",
+        "text": "Macbeth murders Duncan, and the couple reacts to guilt and fear. When? Duncan murder blood",
+        "play": "Macbeth",
+        "act": 2,
+        "scene": 2,
+        "speaker": "MACBETH"
+      }
+    ]
+  },
+  {
+    "query": "Who is Hamlet?",
+    "answer": "[PLACEHOLDER ANSWER]\nConnect this function to your selected language model or API. Your final answer should use the retrieved context and should not invent unsupported details.",
+    "retrieved_evidence": [
+      {
+        "rank": 1,
+        "score": 0.716,
+        "chunk_id": "hamlet_1_3_0026",
+        "text": "Laertes and Polonius warn Ophelia about Hamlet. I do not know, my lord, what I should think, Ophelia Polonius",
+        "play": "Hamlet",
+        "act": 1,
+        "scene": 3,
+        "speaker": "OPHELIA"
+      },
+      {
+        "rank": 2,
+        "score": 0.7143,
+        "chunk_id": "hamlet_1_3_0004",
+        "text": "Laertes and Polonius warn Ophelia about Hamlet. Do you doubt that? Ophelia Polonius",
+        "play": "Hamlet",
+        "act": 1,
+        "scene": 3,
+        "speaker": "OPHELIA"
+      },
+      {
+        "rank": 3,
+        "score": 0.7086,
+        "chunk_id": "hamlet_1_3_0006",
+        "text": "Laertes and Polonius warn Ophelia about Hamlet. No more but so? Ophelia Polonius",
+        "play": "Hamlet",
+        "act": 1,
+        "scene": 3,
+        "speaker": "OPHELIA"
+      }
+    ]
+  },
+  {
+    "query": "What is the conflict between the Montagues and the Capulets?",
+    "answer": "[PLACEHOLDER ANSWER]\nConnect this function to your selected language model or API. Your final answer should use the retrieved context and should not invent unsupported details.",
+    "retrieved_evidence": [
+      {
+        "rank": 1,
+        "score": 0.6224,
+        "chunk_id": "romeo_and_juliet_1_1_0054",
+        "text": "A street fight shows the feud; Romeo is lovesick for Rosaline. Down with the Capulets! Down with the Montagues! feud Romeo Rosaline",
+        "play": "Romeo and Juliet",
+        "act": 1,
+        "scene": 1,
+        "speaker": "CITIZENS"
+      },
+      {
+        "rank": 2,
+        "score": 0.5953,
+        "chunk_id": "romeo_and_juliet_1_1_0063",
+        "text": "A street fight shows the feud; Romeo is lovesick for Rosaline. Rebellious subjects, enemies to peace, Profaners of this neighbour-stained steel- Will they not hear? What, ho! you men, you beasts, That quench the fire of your pernicious rage With purple fountains issuing from your veins! On pain of torture, from those bloody hands Throw your mistempered weapons to the ground And hear the sentence of your moved prince. Three civil brawls, bred of an airy word By thee, old Capulet, and Montague, Have thrice disturb'd the quiet of our streets And made Verona's ancient citizens Cast by their grave beseeming ornaments To wield old partisans, in hands as old, Cank'red with peace, to part your cank'red hate. If ever you disturb our streets again, Your lives shall pay the forfeit of the peace. For this time all the rest depart away. You, Capulet, shall go along with me; And, Montague, come you this afternoon, To know our farther pleasure in this case, To old Freetown, our common judgment place. Once more, on pain of death, all men depart. feud Romeo Rosaline",
+        "play": "Romeo and Juliet",
+        "act": 1,
+        "scene": 1,
+        "speaker": "PRINCE"
+      },
+      {
+        "rank": 3,
+        "score": 0.5649,
+        "chunk_id": "romeo_and_juliet_1_5_0028",
+        "text": "Romeo and Juliet meet and fall in love before learning they are from enemy families. This, by his voice, should be a Montague. Fetch me my rapier, boy. What, dares the slave Come hither, cover'd with an antic face, To fleer and scorn at our solemnity? Now, by the stock and honour of my kin, To strike him dead I hold it not a sin. meeting love feud",
+        "play": "Romeo and Juliet",
+        "act": 1,
+        "scene": 5,
+        "speaker": "TYBALT"
+      }
+    ]
+  },
+  {
+    "query": "Why does Hamlet delay taking revenge?",
+    "answer": "[PLACEHOLDER ANSWER]\nConnect this function to your selected language model or API. Your final answer should use the retrieved context and should not invent unsupported details.",
+    "retrieved_evidence": [
+      {
+        "rank": 1,
+        "score": 0.7188,
+        "chunk_id": "hamlet_4_4_0015",
+        "text": "Hamlet compares himself to Fortinbras and criticises his delay. Why, then the Polack never will defend it. Fortinbras delay",
+        "play": "Hamlet",
+        "act": 4,
+        "scene": 4,
+        "speaker": "HAMLET"
+      },
+      {
+        "rank": 2,
+        "score": 0.697,
+        "chunk_id": "hamlet_4_4_0004",
+        "text": "Hamlet compares himself to Fortinbras and criticises his delay. Go softly on. Fortinbras delay",
+        "play": "Hamlet",
+        "act": 4,
+        "scene": 4,
+        "speaker": "FOR"
+      },
+      {
+        "rank": 3,
+        "score": 0.6951,
+        "chunk_id": "hamlet_4_4_0011",
+        "text": "Hamlet compares himself to Fortinbras and criticises his delay. Who commands them, sir? Fortinbras delay",
+        "play": "Hamlet",
+        "act": 4,
+        "scene": 4,
+        "speaker": "HAMLET"
+      }
+    ]
+  },
+  {
+    "query": "Generate a short Shakespearean-style response from Juliet explaining her conflict after meeting Romeo.",
+    "answer": "[PLACEHOLDER ANSWER]\nConnect this function to your selected language model or API. Your final answer should use the retrieved context and should not invent unsupported details.",
+    "retrieved_evidence": [
+      {
+        "rank": 1,
+        "score": 0.6626,
+        "chunk_id": "romeo_and_juliet_2_4_0024",
+        "text": "Romeo arranges marriage plans through the Nurse. A most courteous exposition. Nurse message",
+        "play": "Romeo and Juliet",
+        "act": 2,
+        "scene": 4,
+        "speaker": "ROMEO"
+      },
+      {
+        "rank": 2,
+        "score": 0.6545,
+        "chunk_id": "romeo_and_juliet_2_4_0080",
+        "text": "Romeo arranges marriage plans through the Nurse. I will tell her, sir, that you do protest, which, as I take it, is a gentlemanlike offer. Nurse message",
+        "play": "Romeo and Juliet",
+        "act": 2,
+        "scene": 4,
+        "speaker": "NURSE"
+      },
+      {
+        "rank": 3,
+        "score": 0.649,
+        "chunk_id": "romeo_and_juliet_2_4_0045",
+        "text": "Romeo arranges marriage plans through the Nurse. O, thou art deceiv'd! I would have made it short; for I was come to the whole depth of my tale, and meant indeed to occupy the argument no longer. Nurse message",
+        "play": "Romeo and Juliet",
+        "act": 2,
+        "scene": 4,
+        "speaker": "MERCUTIO"
+      }
+    ]
+  }
+]
