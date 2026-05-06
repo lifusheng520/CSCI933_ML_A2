@@ -77,6 +77,9 @@ def generate_answer(prompt: str) -> str:
 
 
 def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieved: List[Tuple[Chunk, float]]) -> None:
+    """
+    Log Q&A retrieval results into json structure.
+    """
     # set up records structure
     current_entry = {
         "query": query,
@@ -108,7 +111,9 @@ def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieve
 
 
 def save_history(history: List[Dict], output_file: Any) -> None:
-    # save all the records before quit or exit
+    """
+    Save the Q&A retrieval results history to the output file.
+    """
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(history, f, indent=2, ensure_ascii=False)
     print(f"All records has been saved as {output_file}")
