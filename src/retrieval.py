@@ -11,9 +11,10 @@ or another approved method, but must justify the design in the report.
 from __future__ import annotations
 
 from typing import Any, Dict, List, Tuple
+from sentence_transformers import SentenceTransformer
 
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
+import faiss 
 
 
 Chunk = Dict[str, Any]
@@ -21,7 +22,7 @@ Chunk = Dict[str, Any]
 
 class EmbeddingRetriever:
     """
-    Simple embedding-based retriever.
+    Faiss-based embedding retriever.
     """
 
     def __init__(self, embedding_model_name: str):
@@ -29,34 +30,62 @@ class EmbeddingRetriever:
             from sentence_transformers import SentenceTransformer
         except ImportError as exc:
             raise ImportError(
-                "sentence-transformers is required for this starter retriever. "
-                "Install with: pip install sentence-transformers"
+                "Install sentence-transformers: pip install sentence-transformers"
             ) from exc
 
-        self.model = SentenceTransformer(embedding_model_name)
+        self.faiss = faiss
+        self.model = SentenceTransformer(embedding_model_name, device="cpu")
+
         self.chunks: List[Chunk] = []
         self.embeddings: np.ndarray | None = None
+        self.index = None
 
     def build_index(self, chunks: List[Chunk]) -> None:
         """
-        Create embeddings for all chunks.
+        Create FAISS index from embeddings.
         """
         if not chunks:
             raise ValueError("No chunks supplied to build_index().")
 
         self.chunks = chunks
         texts = [chunk["text"] for chunk in chunks]
-        self.embeddings = np.asarray(self.model.encode(texts, show_progress_bar=True))
+
+        embeddings = self.model.encode(
+            texts,
+            show_progress_bar=True,
+            batch_size=32,
+            convert_to_numpy=True,
+            device="cpu"
+        )
+
+        # Normalize embeddings → cosine similarity via inner product
+        faiss.normalize_L2(embeddings)
+
+        self.embeddings = embeddings
+
+        dim = embeddings.shape[1]
+
+        # Inner product index (cosine after normalization)
+        self.index = self.faiss.IndexFlatIP(dim)
+        self.index.add(embeddings)
 
     def retrieve(self, query: str, top_k: int = 3) -> List[Tuple[Chunk, float]]:
         """
-        Retrieve top-k chunks for a query.
+        Retrieve top-k chunks using FAISS.
         """
-        if self.embeddings is None:
-            raise RuntimeError("Index has not been built. Call build_index() first.")
+        if self.index is None:
+            raise RuntimeError("Index not built. Call build_index() first.")
 
-        query_embedding = np.asarray(self.model.encode([query]))
-        scores = cosine_similarity(query_embedding, self.embeddings)[0]
+        query_embedding = np.array(self.model.encode([query]))
+        self.faiss.normalize_L2(query_embedding)
 
-        top_indices = np.argsort(scores)[::-1][:top_k]
-        return [(self.chunks[i], float(scores[i])) for i in top_indices]
+        scores, indices = self.index.search(query_embedding, top_k)
+
+        results = []
+        for idx, score in zip(indices[0], scores[0]):
+            chunk = self.chunks[idx]
+
+            # IMPORTANT: keep evidence structured for RAG report
+            results.append((chunk, float(score)))
+
+        return results

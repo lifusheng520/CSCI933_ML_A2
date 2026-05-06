@@ -24,7 +24,7 @@ PLAY_FILES = {
 DATA_FILES = [
     PROCESSED_DIR / "hamlet_chunks.jsonl",
     PROCESSED_DIR / "macbeth_chunks.jsonl",
-    PROCESSED_DIR / "romeo_chunks.jsonl"
+    PROCESSED_DIR / "romeo_and_juliet_chunks.jsonl"
 ]
 
 DEFAULT_TOP_K = 3
