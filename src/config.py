@@ -27,6 +27,8 @@ DATA_FILES = [
     PROCESSED_DIR / "romeo_chunks.jsonl"
 ]
 
+CHUNK_TYPES = ["scene", "utterance", "event"]
+
 DEFAULT_TOP_K = 3
 
 # Suggested lightweight embedding model.

@@ -2,7 +2,6 @@
 Data loading utilities.
 
 This file assumes that the processed Shakespeare dataset is available in JSON format.
-Students may modify this loader if the provided dataset structure differs.
 
 Expected examples:
 1. A file containing a list of records:
@@ -19,87 +18,108 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any, Dict, List
-
-from config import PLAY_FILES
+from config import PROCESSED_DIR
 
 
 Record = Dict[str, Any]
 
 
-def _extract_records(obj: Any) -> List[Record]:
+def load_jsonl(file_path: Path) -> List[Record]:
     """
-    Extract a list of records from a JSON object.
-
-    Students should adapt this function if their dataset schema differs.
+    Load a JSONL file.
+    Each line must contain one JSON object.
     """
-    if isinstance(obj, list):
-        return obj
-
-    if isinstance(obj, dict):
-        for key in ["records", "utterances", "scenes", "chunks", "data"]:
-            if key in obj and isinstance(obj[key], list):
-                return obj[key]
-
-    raise ValueError(
-        "Could not extract records. Expected a list or a dictionary containing "
-        "one of: records, utterances, scenes, chunks, data."
-    )
-
-
-def load_json_records(path: Path) -> List[Record]:
-    """
-    Load one processed Shakespeare JSON file.
-    """
-    if not path.exists():
-        raise FileNotFoundError(
-            f"Could not find dataset file: {path}\n"
-            "Place the provided dataset files in data/processed/."
-        )
-
-    with path.open("r", encoding="utf-8") as f:
-        obj = json.load(f)
-
-    records = _extract_records(obj)
-    return records
-
-
-def load_all_plays() -> List[Record]:
-    """
-    Load records from all three compulsory plays.
-    """
-    all_records: List[Record] = []
-
-    for play_key, path in PLAY_FILES.items():
-        records = load_json_records(path)
-        for r in records:
-            r.setdefault("play_key", play_key)
-        all_records.extend(records)
-
-    return all_records
-
-def load_jsonl(file_path):
     records = []
+
     with open(file_path, "r", encoding="utf-8") as f:
         for line in f:
+            line = line.strip()
+
+            if not line:
+                continue
+
             records.append(json.loads(line))
+
     return records
 
 
-def load_dataset(file_list):
+def normalize_chunk(record: Record) -> Record:
     """
-    Load all processed chunk files
+    Normalize different chunk schemas into
+    one consistent retrieval schema.
     """
+
+    chunk_type = record.get("chunk_type", "unknown")
+
+    # unified chunk id
+    chunk_id = (
+        record.get("chunk_id")
+        or record.get("scene_id")
+        or record.get("utterance_id")
+        or record.get("event_id")
+    )
+
+    normalized = {
+        # universal identifiers
+        "chunk_id": chunk_id,
+        "chunk_type": chunk_type,
+
+        # core retrieval text
+        "text": record.get("text", ""),
+
+        # metadata
+        "play": record.get("play"),
+        "act": record.get("act"),
+        "scene": record.get("scene"),
+        "scene_id": record.get("scene_id"),
+
+        # optional metadata
+        "speaker": record.get("speaker"),
+        "location": record.get("location"),
+        "scene_summary": record.get("scene_summary"),
+        "keywords": record.get("keywords", []),
+    }
+
+    return normalized
+
+
+def load_dataset(file_list: List[Path]) -> List[Record]:
+    """
+    Load and normalize multiple chunk files.
+    """
+
     all_records = []
 
     for path in file_list:
         records = load_jsonl(path)
-        all_records.extend(records)
+
+        for r in records:
+            all_records.append(normalize_chunk(r))
 
     return all_records
 
 
+# FILTERING
+def filter_by_chunk_type(
+    records: List[Record],
+    chunk_type: str
+) -> List[Record]:
+    """
+    Filter records by chunk type.
+    """
+    return [
+        r for r in records
+        if r["chunk_type"] == chunk_type
+    ]
+
 if __name__ == "__main__":
-    records = load_all_plays()
-    print(f"Loaded {len(records)} records.")
-    print("First record:")
+
+    folder = Path(PROCESSED_DIR)
+    files = list(folder.glob("*.jsonl"))
+
+    records = load_dataset(files)
+
+    print(f"Loaded {len(records)} records")
+
+    print("\nFirst record:\n")
     print(json.dumps(records[0], indent=2, ensure_ascii=False))
