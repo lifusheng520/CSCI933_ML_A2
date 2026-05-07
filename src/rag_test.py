@@ -8,10 +8,11 @@ from typing import Any, Dict, List, Tuple, Optional
 import json
 
 from config import DEFAULT_TOP_K, EMBEDDING_MODEL_NAME, PROMPT_DIR, RESULTS_DIR, DATA_FILES
-from data_loader import load_all_plays, Record, load_json_records, load_jsonl
-from chunking import create_chunks, format_chunk_for_display
+from data_loader import Record, load_jsonl
+from chunking import format_chunk_for_display
 from retrieval import EmbeddingRetriever
 from baseline import baseline_answer
+from gemma_models import GemmaAssistant
 
 Chunk = Dict[str, Any]
 ANSWERS_DIR = RESULTS_DIR / "answers"
@@ -48,21 +49,73 @@ Answer:
 """
     return prompt
 
+# def build_rag_prompt_event_chunk(query: str, retrieved: List[Tuple[Chunk, float]]) -> str:
+#     """
+#     Build a prompt for a RAG-based answer.
+#     Ensures grounding, beginner-friendly explanation, and clear evidence usage.
+#     """
 
-def generate_answer(prompt: str, model_name:str = "distilgpt2") -> str:
-    """
-    Placeholder language-model interface.
+#     system_prompt = load_system_prompt()
 
-    Students must replace this with one of:
-    - a local HuggingFace model;
-    - an approved hosted API;
-    - another justified SLM interface.
+#     # -------------------------
+#     # Format retrieved context
+#     # -------------------------
+#     context_blocks = []
+#     for rank, (chunk, score) in enumerate(retrieved, start=1):
+#         block = (
+#             f"[Context {rank} | similarity={score:.4f}]\n"
+#             f"Play: {chunk.get('play')}, Act {chunk.get('act')}, Scene {chunk.get('scene')}, Speaker: {chunk.get('speaker')}\n"
+#             f"Scene Summary: {chunk.get('scene_summary')}\n"
+#             f"Event Summary: {chunk.get('event_summary')}\n"
+#             f"Text: {chunk.get('text')}"
+#         )
+#         context_blocks.append(block)
 
-    The returned answer must be conditioned on the retrieved context.
-    """
-    answer = baseline_answer(prompt)
-    return (answer)
+#     context = "\n\n".join(context_blocks)
 
+#     # -------------------------
+#     # Strong RAG instructions
+#     # -------------------------
+#     instructions = """
+# You must follow these rules:
+# 1. Answer ONLY using the retrieved context above.
+# 2. Do NOT invent information not supported by the context.
+# 3. If the context is insufficient, say "The provided context is insufficient to answer this question."
+# 4. Explain clearly for a beginner with no prior knowledge of Shakespeare.
+# 5. When possible, refer to Act/Scene in your explanation.
+# 6. Keep the answer concise but informative.
+# """
+
+#     prompt = f"""{system_prompt}
+
+# {instructions}
+
+# ---------------------
+# Retrieved Context:
+# {context}
+# ---------------------
+
+# User Question:
+# {query}
+
+# Answer:
+# """
+
+#     return prompt
+
+# def generate_answer(prompt: str, model_name:str = "distilgpt2") -> str:
+#     """
+#     Placeholder language-model interface.
+
+#     Students must replace this with one of:
+#     - a local HuggingFace model;
+#     - an approved hosted API;
+#     - another justified SLM interface.
+
+#     The returned answer must be conditioned on the retrieved context.
+#     """
+#     answer = baseline_answer(prompt)
+#     return (answer)
 
 def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieved: List[Tuple[Chunk, float]]) -> None:
     """
@@ -90,7 +143,7 @@ def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieve
             "play": chunk["play"],
             "act": chunk["act"],
             "scene": chunk["scene"],
-            "speaker": chunk["speaker"]
+            "speakers": chunk["speakers"]
         }
         current_entry["retrieved_evidence"].append(evidence_item)
 
@@ -106,7 +159,7 @@ def save_history(history: List[Dict], output_file: Any) -> None:
         json.dump(history, f, indent=2, ensure_ascii=False)
     print(f"All records has been saved as {output_file}")
 
-def main() -> None:
+def main(assistant) -> None:
 
     # load chunk datasets
     chunks = load_dataset_by_chunk_type()
@@ -121,7 +174,7 @@ def main() -> None:
     OUTPUT_LOG_FILE = ANSWERS_DIR / "retrieval_history.json"
     q_and_a_history = []
 
-    print("Shakespeare-aware RAG chatbot scaffold.")
+    print("Shakespeare-aware RAG chatbot.")
     print("Type 'quit' to exit.\n")
 
     while True:
@@ -132,7 +185,8 @@ def main() -> None:
 
         retrieved = retriever.retrieve(query, top_k=DEFAULT_TOP_K)
         prompt = build_rag_prompt(query, retrieved)
-        answer = generate_answer(prompt)
+
+        answer = assistant.generate_answer(prompt)
 
         log_retrieval_results(q_and_a_history, query, answer, retrieved)
 
@@ -140,10 +194,10 @@ def main() -> None:
         print(answer)
         print("\n")
 
-def load_dataset_by_chunk_type(chunk_type: str = "hybrid") -> List[Record]:
+def load_dataset_by_chunk_type(chunk_type: str = "events") -> List[Record]:
     """
     Load records from all JSONL files whose filename contains `chunk_type`
-    (e.g. 'hybrid', 'scene', 'speaker', 'utterance').
+    (e.g. 'hybrid', 'scene', 'event', 'utterance').
 
     Args:
         folder_path: directory containing jsonl files
@@ -161,7 +215,7 @@ def load_dataset_by_chunk_type(chunk_type: str = "hybrid") -> List[Record]:
         name = path.name  # file name only
 
         # insert "_hybrid" before "_chunks"
-        new_name = name.replace("_chunks", f"_{chunk_type}_chunks")
+        new_name = name.replace("_chunks", f"_{chunk_type}")
 
         updated_paths.append(path.with_name(new_name))
 
@@ -173,4 +227,9 @@ def load_dataset_by_chunk_type(chunk_type: str = "hybrid") -> List[Record]:
     return all_records
 
 if __name__ == "__main__":
-    main()
+
+    model_name = "google/gemma-3-270m-it"   # instruction-tuned version
+    # model_name = "google/gemma-3-1b-it"   # instruction-tuned version
+    # model_name = "google/gemma-3-4b-it"   # instruction-tuned version
+    assistant = GemmaAssistant(model_name)
+    main(assistant)

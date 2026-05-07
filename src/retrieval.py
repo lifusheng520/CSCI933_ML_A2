@@ -40,6 +40,27 @@ class EmbeddingRetriever:
         self.embeddings: np.ndarray | None = None
         self.index = None
 
+    def _build_retrieval_text(self, chunk: Chunk) -> str:
+        """
+        Text used for embedding/retrieval.
+        """
+
+        return f"""
+        Play: {chunk.get("play", "")}
+
+        Scene summary:
+        {chunk.get("scene_summary", "")}
+
+        Event summary:
+        {chunk.get("event_summary", "")}
+
+        Speaker:
+        {chunk.get("speaker", "")}
+
+        Text preview:
+        {chunk.get("text", "")[:300]}
+        """
+
     def build_index(self, chunks: List[Chunk]) -> None:
         """
         Create FAISS index from embeddings.
@@ -48,10 +69,18 @@ class EmbeddingRetriever:
             raise ValueError("No chunks supplied to build_index().")
 
         self.chunks = chunks
-        texts = [chunk["text"] for chunk in chunks]
+        
+        # indexing by texts
+        # retrieval_texts = [chunk["text"] for chunk in chunks]
+
+        # indexing by summaries, but retrieve all
+        retrieval_texts = [
+            self._build_retrieval_text(chunk)
+            for chunk in chunks
+        ]
 
         embeddings = self.model.encode(
-            texts,
+            retrieval_texts,
             show_progress_bar=True,
             batch_size=32,
             convert_to_numpy=True,
@@ -68,6 +97,8 @@ class EmbeddingRetriever:
         # Inner product index (cosine after normalization)
         self.index = self.faiss.IndexFlatIP(dim)
         self.index.add(embeddings)
+
+        print(f"Indexed {len(chunks)} chunks.")
 
     def retrieve(self, query: str, top_k: int = 3) -> List[Tuple[Chunk, float]]:
         """

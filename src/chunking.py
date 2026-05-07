@@ -79,12 +79,18 @@ def format_chunk_for_display(chunk: Chunk) -> str:
     act = chunk.get("act", "?")
     scene = chunk.get("scene", "?")
     speaker = chunk.get("speaker", "")
+    scene_summary = chunk.get("scene_summary", "")
+    event_summary = chunk.get("event_summary", "")
     #chunk_type = chunk.get("chunk_type")
 
     #header = f"{play}, Act {act}, Scene {scene}, Chunk Type: {chunk_type}"
     header = f"{play}, Act {act}, Scene {scene}"
     if speaker:
         header += f", Speaker: {speaker}"
+    if scene_summary:
+        header += f", Scene Summary: {scene_summary}"
+    if event_summary:
+        header += f", Event Summary: {event_summary}"
 
     return f"[{header}]\n{chunk.get('text', '')}"
 
