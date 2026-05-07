@@ -82,7 +82,7 @@ def generate_answer(self, query, max_new_tokens=150)
 - generate answers by retrieved chunks and question
   
   
-# Event Summary Generation
+# 4 Event Summary Generation
 
 gemma_models.py
 ```python
@@ -90,3 +90,25 @@ def summarize(self, query, max_new_tokens=150)
 ```
 - For event chunks, generate event summary for retrieval enhancement
 - replace event summary in event chunks with Ai-generated content
+
+# 5 Tips for Downloading Gemma Models
+
+In order to use pretrained models, Google Gemma require users to login huggingface and get access granted first. 
+
+
+**Steps**
+
+1. Make sure that transformers library has already been installed in conda environment. If not,
+  ```
+    pip install transformers
+  ```
+2. Login huggingface to get granted for a model, e.g. gemma-3-1b-it
+    https://huggingface.co/google/gemma-3-1b-it
+3. Create a token: https://huggingface.co/settings/tokens. Copy and save it in notebook since it's not visible after created.
+4. On the page above, edit the permission of the token, and toggle this permission - "Read access to contents of all public gated repos you can access" and save.
+5. Activate conda environment e.g. "933_rag": conda activate 933_rag
+6. Login huggingface, then paste the token when prompted. The token is not visible.
+  ```
+    hf auth login
+  ```
+7. Run rag_test.py, gemma model will be downloaded automatically for the first time.
