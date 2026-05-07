@@ -143,7 +143,7 @@ def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieve
             "play": chunk["play"],
             "act": chunk["act"],
             "scene": chunk["scene"],
-            "speakers": chunk["speakers"]
+            # "speakers": chunk["speakers"] # scenes has no tag.
         }
         current_entry["retrieved_evidence"].append(evidence_item)
 
@@ -159,10 +159,10 @@ def save_history(history: List[Dict], output_file: Any) -> None:
         json.dump(history, f, indent=2, ensure_ascii=False)
     print(f"All records has been saved as {output_file}")
 
-def main(assistant) -> None:
+def main(assistant, chunk_type='event') -> None:
 
     # load chunk datasets
-    chunks = load_dataset_by_chunk_type()
+    chunks = load_dataset_by_chunk_type(chunk_type)
 
     retriever = EmbeddingRetriever(EMBEDDING_MODEL_NAME)
     retriever.build_index(chunks)
@@ -232,4 +232,4 @@ if __name__ == "__main__":
     # model_name = "google/gemma-3-1b-it"   # instruction-tuned version
     # model_name = "google/gemma-3-4b-it"   # instruction-tuned version
     assistant = GemmaAssistant(model_name)
-    main(assistant)
+    main(assistant, 'scenes')

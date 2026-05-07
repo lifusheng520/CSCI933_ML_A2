@@ -40,10 +40,46 @@ class EmbeddingRetriever:
         self.embeddings: np.ndarray | None = None
         self.index = None
 
+    def _get_text(self, chunk):
+
+        import re
+
+        text = chunk["text"]
+
+        # Event Chunk
+        # match = re.search(r"Event dialogue:\s*(.*)", text, re.DOTALL)
+
+        # Scene Chunk
+        match = re.search(r"Scene text:\s*(.*)", text, re.DOTALL)
+
+        dialogue = match.group(1).strip() if match else ""
+
+        # print(dialogue)
+        return dialogue
+
     def _build_retrieval_text(self, chunk: Chunk) -> str:
         """
         Text used for embedding/retrieval.
         """
+
+        # return f"""
+        # Play: {chunk.get("play", "")}
+
+        # Scene summary:
+        # {chunk.get("scene_summary", "")}
+
+        # Event summary:
+        # {chunk.get("event_summary", "")}
+
+        # Keywords:
+        # {chunk.get("keywords", "")}
+
+        # Speaker:
+        # {chunk.get("speaker", "")}
+
+        # Text preview:
+        # {self._get_dialogue(chunk)[:300]}
+        # """
 
         return f"""
         Play: {chunk.get("play", "")}
@@ -51,14 +87,14 @@ class EmbeddingRetriever:
         Scene summary:
         {chunk.get("scene_summary", "")}
 
-        Event summary:
-        {chunk.get("event_summary", "")}
+        Keywords:
+        {chunk.get("keywords", "")}
 
         Speaker:
         {chunk.get("speaker", "")}
 
         Text preview:
-        {chunk.get("text", "")[:300]}
+        {self._get_text(chunk)[:300]}
         """
 
     def build_index(self, chunks: List[Chunk]) -> None:
