@@ -61,6 +61,46 @@ class GemmaAssistant:
         decoded = self.tokenizer.decode(outputs[0][input_length:], skip_special_tokens=True)
         return decoded.strip()
 
+    def summarize(self, query, max_new_tokens=150):
+
+        # Format the system prompt and query
+        system_rules = (
+            "You are a Shakespeare expert assistant.You summary the input briefly.\n"
+            "Rules:\n"
+            "- Answer concisely, clearly and directly.\n"
+            "- Do NOT write scripts, dialogues, or plays.\n"
+            "- Keep answers short and factual.\n"
+            "- If unsure, say you don't know."
+        )
+
+        messages = [
+            {"role": "user", "content": f"{system_rules}\n\nQuestion: {query}"},
+        ]
+
+        # Process tokens
+        inputs = self.tokenizer.apply_chat_template(
+            messages,
+            add_generation_prompt=True,
+            tokenize=True,
+            return_dict=True,
+            return_tensors="pt",
+        ).to(self.device)
+
+        # Generate
+        # with torch.no_grad(): # Disable gradient calculation for inference speed
+        outputs = self.model.generate(
+            **inputs, 
+            max_new_tokens=max_new_tokens,
+            do_sample=True,
+            temperature=0.7,
+            pad_token_id=self.tokenizer.eos_token_id
+        )
+
+        # Decode only the newly generated tokens
+        input_length = inputs["input_ids"].shape[-1]
+        decoded = self.tokenizer.decode(outputs[0][input_length:], skip_special_tokens=True)
+        return decoded.strip()
+
 if __name__ == "__main__":
 
     # Gemma Models
