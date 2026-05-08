@@ -10,7 +10,7 @@ class GemmaAssistant:
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name, 
-            dtype=torch.float16 if self.device == "mps" else torch.float32
+            dtype=torch.float32 if self.device == "mps" else torch.float32
         ).to(self.device)
         self.model.eval()
         

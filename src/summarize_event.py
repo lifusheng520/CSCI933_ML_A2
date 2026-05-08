@@ -41,7 +41,7 @@ def process_jsonl(assistant, input_file, output_file):
             # 2. Get the new summary from LLM
             #print(f"Summarizing chunk: {data.get('chunk_id')}...")
             new_summary = get_llm_summary(assistant, event_text)
-            #print(f"AI-generated summary: {new_summary}")
+            print(f"AI-generated summary: {new_summary}")
             
             # 3. Replace the old summary
             data["event_summary"] = new_summary
@@ -66,7 +66,3 @@ if __name__ == "__main__":
         os.system("afplay /System/Library/Sounds/Glass.aiff")
         time.sleep(0.5)
         
-
-
-
-
