@@ -10,7 +10,7 @@ class GemmaAssistant:
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name, 
-            torch_dtype=torch.float16 if self.device == "mps" else torch.float32
+            dtype=torch.float16 if self.device == "mps" else torch.float32
         ).to(self.device)
         self.model.eval()
         
@@ -54,8 +54,8 @@ class GemmaAssistant:
             **inputs, 
             max_new_tokens=max_new_tokens,
             do_sample=False,
-            temperature=0.7,
-            pad_token_id=self.tokenizer.eos_token_id
+            pad_token_id=self.tokenizer.pad_token_id if self.tokenizer.pad_token_id is not None else self.tokenizer.eos_token_id,
+            eos_token_id=self.tokenizer.eos_token_id
         )
 
         # Decode only the newly generated tokens

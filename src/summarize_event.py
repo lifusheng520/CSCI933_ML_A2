@@ -60,5 +60,13 @@ if __name__ == "__main__":
     process_jsonl(assistant, '/Users/sylas/Coding workspace/CSCI933_ML_A2/data/processed/macbeth_events.jsonl', '/Users/sylas/Coding workspace/CSCI933_ML_A2/data/processed/macbeth_events_aigen_4b.jsonl')
     print("Processing complete!")
 
+    import os
+    import time
+    for _ in range(10):
+        os.system("afplay /System/Library/Sounds/Glass.aiff")
+        time.sleep(0.5)
+        
+
+
 
 
