@@ -4,16 +4,18 @@ from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
 class GemmaAssistant:
     def __init__(self, model_name="google/gemma-3-1b-it"):
         print(f"Loading model: {model_name}...")
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.device = "mps" if torch.backends.mps.is_available() else "cpu"
         
         # Load once and move to device
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name, 
-            torch_dtype=torch.bfloat16 if self.device == "cuda" else torch.float32
+            dtype=torch.float32 if self.device == "mps" else torch.float32
         ).to(self.device)
+        self.model.eval()
         
         print("Model loaded successfully.")
+        print(f"Using device: {self.device}")
 
     def generate_answer(self, query, max_new_tokens=150):
 
@@ -51,9 +53,9 @@ class GemmaAssistant:
         outputs = self.model.generate(
             **inputs, 
             max_new_tokens=max_new_tokens,
-            do_sample=True,
-            temperature=0.7,
-            pad_token_id=self.tokenizer.eos_token_id
+            do_sample=False,
+            pad_token_id=self.tokenizer.pad_token_id if self.tokenizer.pad_token_id is not None else self.tokenizer.eos_token_id,
+            eos_token_id=self.tokenizer.eos_token_id
         )
 
         # Decode only the newly generated tokens

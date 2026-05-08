@@ -11,11 +11,11 @@ def get_llm_summary(assistant, text):
 def build_prompt_no_rag(question):
 
     prompt = f"""
-You are a Shakespeare-aware assistant helping a beginner understand the plays.
-Summarize the "text" below briefly.
+    You are a Shakespeare-aware assistant helping a beginner understand the plays.
+    Summarize the "text" below briefly.
 
-Explain clearly in modern English.
-Keep the answer concise and accurate.
+    Explain clearly in modern English.
+    Keep the answer concise and accurate.
 
 Text:
 {question}
@@ -39,7 +39,7 @@ def process_jsonl(assistant, input_file, output_file):
             event_text = data.get("text", "")
             
             # 2. Get the new summary from LLM
-            print(f"Summarizing chunk: {data.get('chunk_id')}...")
+            #print(f"Summarizing chunk: {data.get('chunk_id')}...")
             new_summary = get_llm_summary(assistant, event_text)
             print(f"AI-generated summary: {new_summary}")
             
@@ -53,9 +53,16 @@ def process_jsonl(assistant, input_file, output_file):
 if __name__ == "__main__":
 
     # model_name = "google/gemma-3-270m-it"   # instruction-tuned version
-    model_name = "google/gemma-3-1b-it"   # instruction-tuned version
-    # model_name = "google/gemma-3-4b-it"   # instruction-tuned version
+    #model_name = "google/gemma-3-1b-it"   # instruction-tuned version
+    model_name = "google/gemma-3-4b-it"   # instruction-tuned version
     assistant = GemmaAssistant(model_name)
     # Run the process
-    process_jsonl(assistant, '/Users/marvinxue/Github/CSCI933_ML_A2/data/processed/macbeth_events.jsonl', '/Users/marvinxue/Github/CSCI933_ML_A2/data/processed/macbeth_events_aigen.jsonl')
+    process_jsonl(assistant, '/Users/sylas/Coding workspace/CSCI933_ML_A2/data/processed/macbeth_events.jsonl', '/Users/sylas/Coding workspace/CSCI933_ML_A2/data/processed/macbeth_events_aigen_4b.jsonl')
     print("Processing complete!")
+
+    import os
+    import time
+    for _ in range(10):
+        os.system("afplay /System/Library/Sounds/Glass.aiff")
+        time.sleep(0.5)
+        
