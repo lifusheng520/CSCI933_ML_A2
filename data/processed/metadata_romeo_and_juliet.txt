@@ -1,0 +1,24 @@
+PLAY TITLE: Romeo and Juliet
+
+DESCRIPTION:
+A celebrated tragedy set in Verona, Italy, depicting the ill-fated love between two young people from feuding noble families. It explores themes of passionate love, fate, and the destructive nature of generational hatred.
+
+MAIN STORY THREAD:
+- The ancient feud between the Montague and Capulet families frequently erupts into violence in Verona.
+- Romeo Montague and Juliet Capulet meet at a ball and fall instantly in love.
+- With the help of Friar Laurence, they marry in secret, hoping to bridge the gap between their families.
+- A series of fatal misunderstandings and violent encounters leads to the exile of Romeo.
+- Juliet fakes her death to escape an arranged marriage and reunite with Romeo.
+- Due to a failed message, Romeo believes Juliet is truly dead and takes his own life at her tomb.
+- Upon waking and finding Romeo dead, Juliet kills herself.
+- The grieving families finally agree to end their feud.
+
+ROLE MATRIX:
+- Romeo: The son of Montague; an impulsive and romantic young man.
+- Juliet: The daughter of Capulet; a courageous and devoted young woman.
+- Friar Laurence: A Franciscan monk who secretly marries the lovers, hoping for peace.
+- Mercutio: Romeo's witty and mercurial friend; a kinsman to the Prince.
+- Tybalt: Juliet's hot-tempered cousin; a Capulet who loathes the Montagues.
+- The Nurse: Juliet's faithful confidante and maternal figure.
+- Lord/Lady Capulet & Lord/Lady Montague: The heads of the feuding households.
+- Count Paris: A kinsman of the Prince and the suitor preferred by Juliet’s parents.
