@@ -11,11 +11,11 @@ def get_llm_summary(assistant, text):
 def build_prompt_no_rag(question):
 
     prompt = f"""
-You are a Shakespeare-aware assistant helping a beginner understand the plays.
-Summarize the "text" below briefly.
+    You are a Shakespeare-aware assistant helping a beginner understand the plays.
+    Summarize the "text" below briefly.
 
-Explain clearly in modern English.
-Keep the answer concise and accurate.
+    Explain clearly in modern English.
+    Keep the answer concise and accurate.
 
 Text:
 {question}
@@ -59,3 +59,6 @@ if __name__ == "__main__":
     # Run the process
     process_jsonl(assistant, '/Users/sylas/Coding workspace/CSCI933_ML_A2/data/processed/macbeth_events.jsonl', '/Users/sylas/Coding workspace/CSCI933_ML_A2/data/processed/macbeth_events_aigen_4b.jsonl')
     print("Processing complete!")
+
+
+
