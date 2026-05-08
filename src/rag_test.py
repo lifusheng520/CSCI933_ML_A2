@@ -4,8 +4,9 @@ RAG Pipline Tester
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple
 import json
+from collections import Counter
 
 from config import DEFAULT_TOP_K, EMBEDDING_MODEL_NAME, PROMPT_DIR, RESULTS_DIR, DATA_FILES
 from data_loader import Record, load_jsonl
@@ -17,19 +18,36 @@ from gemma_models import GemmaAssistant
 Chunk = Dict[str, Any]
 ANSWERS_DIR = RESULTS_DIR / "answers"
 
-def load_system_prompt() -> str:
-    prompt_path = PROMPT_DIR / "system_prompt.txt"
+def load_system_prompt(file_name:str = "system_prompt.txt") -> str:
+    prompt_path = PROMPT_DIR / file_name
     return prompt_path.read_text(encoding="utf-8")
 
+def retrieve_play_background(play_names: List[str]) -> str:
+    # metadata augmentation
+    play_background_content=''
+    most_common_item = Counter(play_names).most_common(1)
+    if most_common_item:
+        play_name = most_common_item[0][0]
+        print(f"The play found is: {play_name}")
+        
+        # Read the metadata text file directly
+        with open(f'data/processed/metadata_{play_name.lower().replace(" ", "_")}.txt', 'r', encoding='utf-8') as f:
+            play_background_content = f.read()
+    return play_background_content
 
-def build_rag_prompt(query: str, retrieved: List[Tuple[Chunk, float]]) -> str:
+
+def build_rag_prompt(query: str, retrieved: List[Tuple[Chunk, float]], prompt_type="factual") -> str:
     """
     Build a prompt for a RAG-based answer.
+    prompt_type values, include "factual" and "stylised" , means generation using factual style or Shakespeare style.
     """
-    system_prompt = load_system_prompt()
+    system_prompt = load_system_prompt("system_prompt.txt")
+    stylised_prompt = load_system_prompt("stylised_prompt.txt")
 
     context_blocks = []
+    play_names = []
     for rank, (chunk, score) in enumerate(retrieved, start=1):
+        play_names.append(chunk.get("play", ""))
         context_blocks.append(
             f"[Context {rank} | similarity={score:.4f}]\n"
             f"{format_chunk_for_display(chunk)}"
@@ -37,7 +55,16 @@ def build_rag_prompt(query: str, retrieved: List[Tuple[Chunk, float]]) -> str:
 
     context = "\n\n".join(context_blocks)
 
-    prompt = f"""{system_prompt}
+    play_background = retrieve_play_background(play_names)
+
+    if prompt_type == "factual":
+        prompt_temp = system_prompt
+    else:
+        prompt_temp = stylised_prompt
+    prompt = f"""{prompt_temp}
+
+Play background:
+{play_background}
 
 Retrieved context:
 {context}
@@ -48,74 +75,6 @@ User question:
 Answer:
 """
     return prompt
-
-# def build_rag_prompt_event_chunk(query: str, retrieved: List[Tuple[Chunk, float]]) -> str:
-#     """
-#     Build a prompt for a RAG-based answer.
-#     Ensures grounding, beginner-friendly explanation, and clear evidence usage.
-#     """
-
-#     system_prompt = load_system_prompt()
-
-#     # -------------------------
-#     # Format retrieved context
-#     # -------------------------
-#     context_blocks = []
-#     for rank, (chunk, score) in enumerate(retrieved, start=1):
-#         block = (
-#             f"[Context {rank} | similarity={score:.4f}]\n"
-#             f"Play: {chunk.get('play')}, Act {chunk.get('act')}, Scene {chunk.get('scene')}, Speaker: {chunk.get('speaker')}\n"
-#             f"Scene Summary: {chunk.get('scene_summary')}\n"
-#             f"Event Summary: {chunk.get('event_summary')}\n"
-#             f"Text: {chunk.get('text')}"
-#         )
-#         context_blocks.append(block)
-
-#     context = "\n\n".join(context_blocks)
-
-#     # -------------------------
-#     # Strong RAG instructions
-#     # -------------------------
-#     instructions = """
-# You must follow these rules:
-# 1. Answer ONLY using the retrieved context above.
-# 2. Do NOT invent information not supported by the context.
-# 3. If the context is insufficient, say "The provided context is insufficient to answer this question."
-# 4. Explain clearly for a beginner with no prior knowledge of Shakespeare.
-# 5. When possible, refer to Act/Scene in your explanation.
-# 6. Keep the answer concise but informative.
-# """
-
-#     prompt = f"""{system_prompt}
-
-# {instructions}
-
-# ---------------------
-# Retrieved Context:
-# {context}
-# ---------------------
-
-# User Question:
-# {query}
-
-# Answer:
-# """
-
-#     return prompt
-
-# def generate_answer(prompt: str, model_name:str = "distilgpt2") -> str:
-#     """
-#     Placeholder language-model interface.
-
-#     Students must replace this with one of:
-#     - a local HuggingFace model;
-#     - an approved hosted API;
-#     - another justified SLM interface.
-
-#     The returned answer must be conditioned on the retrieved context.
-#     """
-#     answer = baseline_answer(prompt)
-#     return (answer)
 
 def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieved: List[Tuple[Chunk, float]]) -> None:
     """
@@ -159,10 +118,16 @@ def save_history(history: List[Dict], output_file: Any) -> None:
         json.dump(history, f, indent=2, ensure_ascii=False)
     print(f"All records has been saved as {output_file}")
 
-def main(assistant, chunk_type='event') -> None:
+def main(assistant, chunk_type='events') -> None:
 
     # load chunk datasets
-    chunks = load_dataset_by_chunk_type(chunk_type)
+    chunks_scenes = []
+    chunks_events = []
+    if chunk_type == 'hybrid' or chunk_type == 'scenes':
+        chunks_scenes = load_dataset_by_chunk_type(chunk_type="scenes") # scene level
+    if chunk_type == 'hybrid' or chunk_type == 'events':    
+        chunks_events = load_dataset_by_chunk_type(chunk_type="events") # event level
+    chunks = chunks_scenes + chunks_events
 
     retriever = EmbeddingRetriever(EMBEDDING_MODEL_NAME)
     retriever.build_index(chunks)
@@ -181,12 +146,36 @@ def main(assistant, chunk_type='event') -> None:
         query = input("Question: ").strip()
         if query.lower() in {"quit", "exit"}:
             save_history(q_and_a_history, OUTPUT_LOG_FILE)
-            break
+            break   
 
-        retrieved = retriever.retrieve(query, top_k=DEFAULT_TOP_K)
-        prompt = build_rag_prompt(query, retrieved)
+        # Retrieve evidences
+        retrieved_t = retriever.retrieve(query)
+
+        # Re-ranking
+        retrieved = retriever.reranking(query, retrieved_t, top_k=DEFAULT_TOP_K)
+
+        # Detect stylised query by consine similarity
+        is_stylised = retriever.is_stylized_query(query)
+        print(f"\nStylised Query Detected: {is_stylised}")
+
+        # Build prompt: factual response generation vs Shakespeare style generation
+        if not is_stylised:
+
+            prompt = build_rag_prompt(
+                query=query,
+                retrieved=retrieved,
+                prompt_type="factual"
+            )
+        else:
+
+            prompt = build_rag_prompt(
+                query=query,
+                retrieved=retrieved,
+                prompt_type="stylised"
+            )
 
         answer = assistant.generate_answer(prompt)
+        # answer = "" # for debugging
 
         log_retrieval_results(q_and_a_history, query, answer, retrieved)
 
@@ -197,7 +186,7 @@ def main(assistant, chunk_type='event') -> None:
 def load_dataset_by_chunk_type(chunk_type: str = "events") -> List[Record]:
     """
     Load records from all JSONL files whose filename contains `chunk_type`
-    (e.g. 'hybrid', 'scene', 'event', 'utterance').
+    (e.g. 'scenes', 'events', 'utterances').
 
     Args:
         folder_path: directory containing jsonl files
@@ -228,8 +217,10 @@ def load_dataset_by_chunk_type(chunk_type: str = "events") -> List[Record]:
 
 if __name__ == "__main__":
 
-    model_name = "google/gemma-3-270m-it"   # instruction-tuned version
-    # model_name = "google/gemma-3-1b-it"   # instruction-tuned version
+    # model_name = "google/gemma-3-270m-it"   # instruction-tuned version
+    model_name = "google/gemma-3-1b-it"   # instruction-tuned version
     # model_name = "google/gemma-3-4b-it"   # instruction-tuned version
     assistant = GemmaAssistant(model_name)
-    main(assistant, 'scenes')
+    # main(assistant, 'scenes')
+    # main(assistant, 'events')
+    main(assistant, 'hybrid') # hybrid chunks: scenes + hybrid

@@ -11,7 +11,7 @@ or another approved method, but must justify the design in the report.
 from __future__ import annotations
 
 from typing import Any, Dict, List, Tuple
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer, CrossEncoder, util
 
 import numpy as np
 import faiss 
@@ -34,11 +34,71 @@ class EmbeddingRetriever:
             ) from exc
 
         self.faiss = faiss
+        # embedding
         self.model = SentenceTransformer(embedding_model_name, device="cpu")
+        # reranking
+        self.reranker = CrossEncoder(
+            "cross-encoder/ms-marco-MiniLM-L-6-v2"
+        )
 
         self.chunks: List[Chunk] = []
         self.embeddings: np.ndarray | None = None
         self.index = None
+
+        # -------------------------------------------------
+        # Stylised response intent detection
+        # -------------------------------------------------
+
+        self.style_threshold = 0.68
+
+        self.style_keywords = [
+
+            "shakespearean",
+            "shakespeare style",
+            "speak like shakespeare",
+            "old english",
+            "elizabethan",
+            "poetic",
+            "theatrical",
+            "dramatic style",
+            "stylised",
+            "stylized"
+        ]
+
+        self.style_examples = [
+
+            "Answer in Shakespearean style",
+            "Speak like Shakespeare",
+            "Respond like Shakespeare",
+            "Write in Shakespeare style",
+            "Use Shakespearean language",
+
+            "Use old English",
+            "Answer in Elizabethan English",
+            "Write like an old play",
+
+            "Make it poetic",
+            "Make the response dramatic",
+            "Use a theatrical tone",
+            "Respond like a stage play",
+            "Write dramatically",
+
+            "Give a stylised response",
+            "Provide a stylized Shakespeare response",
+            "Answer with Shakespeare-like wording",
+
+            "Couldst thou answer poetically",
+            # "Make it sound like Macbeth",
+            "Talk like a Shakespeare character",
+            "Write as if from a Shakespeare play"
+        ]
+
+        # Precompute embeddings once
+        self.style_embeddings = self.model.encode(
+            self.style_examples,
+            convert_to_numpy=True,
+            normalize_embeddings=True
+        )
 
     def _get_text(self, chunk):
 
@@ -46,11 +106,12 @@ class EmbeddingRetriever:
 
         text = chunk["text"]
 
-        # Event Chunk
-        # match = re.search(r"Event dialogue:\s*(.*)", text, re.DOTALL)
-
         # Scene Chunk
-        match = re.search(r"Scene text:\s*(.*)", text, re.DOTALL)
+        match = re.search(r"Scene text:(.*)", text, re.DOTALL)
+
+        if not match:
+            # Event Chunk
+            match = re.search(r"Event dialogue:(.*)", text, re.DOTALL)
 
         dialogue = match.group(1).strip() if match else ""
 
@@ -61,31 +122,12 @@ class EmbeddingRetriever:
         """
         Text used for embedding/retrieval.
         """
-
-        # return f"""
-        # Play: {chunk.get("play", "")}
-
-        # Scene summary:
-        # {chunk.get("scene_summary", "")}
-
-        # Event summary:
-        # {chunk.get("event_summary", "")}
-
-        # Keywords:
-        # {chunk.get("keywords", "")}
-
-        # Speaker:
-        # {chunk.get("speaker", "")}
-
-        # Text preview:
-        # {self._get_dialogue(chunk)[:300]}
-        # """
-
         return f"""
         Play: {chunk.get("play", "")}
 
-        Scene summary:
-        {chunk.get("scene_summary", "")}
+        Act: {chunk.get("act", "")}
+        
+        Scene: {chunk.get("scene", "")}
 
         Keywords:
         {chunk.get("keywords", "")}
@@ -93,9 +135,15 @@ class EmbeddingRetriever:
         Speaker:
         {chunk.get("speaker", "")}
 
-        Text preview:
-        {self._get_text(chunk)[:300]}
-        """
+        Scene summary:
+        {chunk.get("scene_summary", "")}
+
+        Dialogue:
+        {self._get_text(chunk)}
+        """        
+
+        # {self._get_text(chunk)[:300]}
+
 
     def build_index(self, chunks: List[Chunk]) -> None:
         """
@@ -109,7 +157,7 @@ class EmbeddingRetriever:
         # indexing by texts
         # retrieval_texts = [chunk["text"] for chunk in chunks]
 
-        # indexing by summaries, but retrieve all
+        # indexing by summaries, but not retrieve all
         retrieval_texts = [
             self._build_retrieval_text(chunk)
             for chunk in chunks
@@ -136,7 +184,7 @@ class EmbeddingRetriever:
 
         print(f"Indexed {len(chunks)} chunks.")
 
-    def retrieve(self, query: str, top_k: int = 3) -> List[Tuple[Chunk, float]]:
+    def retrieve(self, query: str, top_k: int = 20) -> List[Tuple[Chunk, float]]:
         """
         Retrieve top-k chunks using FAISS.
         """
@@ -151,8 +199,127 @@ class EmbeddingRetriever:
         results = []
         for idx, score in zip(indices[0], scores[0]):
             chunk = self.chunks[idx]
-
+            # Remove redundant information
+            chunk['text'] = 'Dialogue Text: ' + self._get_text(chunk)
             # IMPORTANT: keep evidence structured for RAG report
             results.append((chunk, float(score)))
 
         return results
+    
+
+    def reranking(self, query: str, results: List[Tuple[Chunk, float]], top_k: int = 3) -> List[Tuple[Chunk, float]]:
+        """
+        Rerank retrieved chunks using CrossEncoder.
+
+        Args:
+            query: user query
+            results: FAISS retrieval results
+                     [(chunk, similarity_score), ...]
+            top_k: number of final reranked results
+
+        Returns:
+            List[(chunk, rerank_score)]
+        """
+
+        if not results:
+            return []
+
+        # Build query-document pairs
+        pairs = [
+            (
+                query,
+                self._build_retrieval_text(chunk)
+            )
+            for chunk, _ in results
+        ]
+
+        # Predict relevance scores
+        scores = self.reranker.predict(pairs)
+
+        # Combine chunk with reranker score
+        reranked = []
+
+        for (chunk, _old_score), rerank_score in zip(results, scores):
+
+            reranked.append(
+                (chunk, float(rerank_score))
+            )
+
+        # Sort descending
+        reranked.sort(
+            key=lambda x: x[1],
+            reverse=True
+        )
+
+        # Return top-k
+        return reranked[:top_k]
+    
+    # Stylised response intent detection
+    def _keyword_style_match(self, query: str) -> bool:
+        """
+        Fast keyword-based style detection.
+        """
+
+        query_lower = query.lower()
+
+        return any(
+            keyword in query_lower
+            for keyword in self.style_keywords
+        )
+
+    def style_similarity(self, query: str) -> float:
+        """
+        Compute similarity between user query
+        and stylised-example questions.
+        """
+
+        # Encode query
+        query_embedding = self.model.encode(
+            [query],
+            convert_to_numpy=True
+        )
+
+        # Cosine similarity
+        similarities = np.dot(
+            self.style_embeddings,
+            query_embedding.T
+        ).squeeze()
+
+        # Max similarity
+        max_score = float(np.max(similarities))
+
+        return max_score
+
+    def is_stylized_query(self, query: str) -> bool:
+        """
+        Determine whether user requests a stylised response.
+
+        Uses:
+        1. keyword matching
+        2. embedding similarity
+        """
+
+        # Fast keyword shortcut
+        if self._keyword_style_match(query):
+            return True
+
+        similarity = self.style_similarity(query)
+
+        return similarity >= self.style_threshold
+
+    def debug_style_detection(self, query: str) -> None:
+        """
+        Debug helper for tuning similarity threshold.
+        """
+
+        similarity = self.style_similarity(query)
+
+        print("=" * 60)
+        print(f"Query: {query}")
+        print(f"Similarity: {similarity:.4f}")
+        print(f"Threshold: {self.style_threshold:.4f}")
+        print(
+            f"Stylised detected: "
+            f"{similarity >= self.style_threshold}"
+        )
+        print("=" * 60)
