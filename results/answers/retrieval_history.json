@@ -2,180 +2,266 @@
   {
     "query": "Why does Macbeth kill Duncan?",
     "answer": "[PLACEHOLDER ANSWER]\nConnect this function to your selected language model or API. Your final answer should use the retrieved context and should not invent unsupported details.",
+    "expected_focus": "",
+    "question_type": "",
+    "system": "",
     "retrieved_evidence": [
       {
         "rank": 1,
-        "score": 0.7858,
-        "chunk_id": "macbeth_2_2_0026",
-        "text": "Macbeth murders Duncan, and the couple reacts to guilt and fear. Who was it that thus cried? Why, worthy Thane, You do unbend your noble strength, to think So brainsickly of things. Go, get some water And wash this filthy witness from your hand. Why did you bring these daggers from the place? They must lie there. Go carry them, and smear The sleepy grooms with blood. Duncan murder blood",
+        "score": 0.7555,
+        "chunk_id": "macbeth_2_3_event_0010",
+        "text": "Dialogue Text: MACBETH: You are, and do not know't. The spring, the head, the fountain of your blood Is stopped, the very source of it is stopp'd. MACDUFF: Your royal father's murther'd. MALCOLM: O, by whom? LENNOX: Those of his chamber, as it seem'd, had done't. Their hands and faces were all badged with blood; So were their daggers, which unwiped we found Upon their pillows. They stared, and were distracted; no man's life Was to be trusted with them. MACBETH: O, yet I do repent me of my fury, That I did kill them. MACDUFF: Wherefore did you so? MACBETH: Who can be wise, amazed, temperate and furious, Loyal and neutral, in a moment? No man. The expedition of my violent love Outrun the pauser reason. Here lay Duncan, His silver skin laced with his golden blood, And his gash'd stabs look'd like a breach in nature For ruin's wasteful entrance; there, the murtherers, Steep'd in the colors of their trade, their daggers Unmannerly breech'd with gore. Who could refrain, That had a heart to love, and in that heart Courage to make 's love known? LADY MACBETH: Help me hence, ho!",
         "play": "Macbeth",
         "act": 2,
-        "scene": 2,
-        "speaker": "LADY MACBETH"
+        "scene": 3,
+        "scene_summary": "Duncan’s murder is discovered and suspicion begins to spread.",
+        "speakers": [
+          "MACBETH",
+          "MACDUFF",
+          "MALCOLM",
+          "LENNOX",
+          "LADY MACBETH"
+        ]
       },
       {
         "rank": 2,
-        "score": 0.773,
-        "chunk_id": "macbeth_2_2_0029",
-        "text": "Macbeth murders Duncan, and the couple reacts to guilt and fear. Whence is that knocking? How is't with me, when every noise appals me? What hands are here? Ha, they pluck out mine eyes! Will all great Neptune's ocean wash this blood Clean from my hand? No, this my hand will rather The multitudinous seas incarnadine, Making the green one red. Duncan murder blood",
+        "score": 0.7555,
+        "chunk_id": "macbeth_2_3_event_0010",
+        "text": "Dialogue Text: MACBETH: You are, and do not know't. The spring, the head, the fountain of your blood Is stopped, the very source of it is stopp'd. MACDUFF: Your royal father's murther'd. MALCOLM: O, by whom? LENNOX: Those of his chamber, as it seem'd, had done't. Their hands and faces were all badged with blood; So were their daggers, which unwiped we found Upon their pillows. They stared, and were distracted; no man's life Was to be trusted with them. MACBETH: O, yet I do repent me of my fury, That I did kill them. MACDUFF: Wherefore did you so? MACBETH: Who can be wise, amazed, temperate and furious, Loyal and neutral, in a moment? No man. The expedition of my violent love Outrun the pauser reason. Here lay Duncan, His silver skin laced with his golden blood, And his gash'd stabs look'd like a breach in nature For ruin's wasteful entrance; there, the murtherers, Steep'd in the colors of their trade, their daggers Unmannerly breech'd with gore. Who could refrain, That had a heart to love, and in that heart Courage to make 's love known? LADY MACBETH: Help me hence, ho!",
         "play": "Macbeth",
         "act": 2,
-        "scene": 2,
-        "speaker": "MACBETH"
+        "scene": 3,
+        "scene_summary": "Duncan’s murder is discovered and suspicion begins to spread.",
+        "speakers": [
+          "MACBETH",
+          "MACDUFF",
+          "MALCOLM",
+          "LENNOX",
+          "LADY MACBETH"
+        ]
       },
       {
         "rank": 3,
-        "score": 0.7705,
-        "chunk_id": "macbeth_2_2_0009",
-        "text": "Macbeth murders Duncan, and the couple reacts to guilt and fear. When? Duncan murder blood",
+        "score": 0.7555,
+        "chunk_id": "macbeth_2_3_event_0010",
+        "text": "Dialogue Text: MACBETH: You are, and do not know't. The spring, the head, the fountain of your blood Is stopped, the very source of it is stopp'd. MACDUFF: Your royal father's murther'd. MALCOLM: O, by whom? LENNOX: Those of his chamber, as it seem'd, had done't. Their hands and faces were all badged with blood; So were their daggers, which unwiped we found Upon their pillows. They stared, and were distracted; no man's life Was to be trusted with them. MACBETH: O, yet I do repent me of my fury, That I did kill them. MACDUFF: Wherefore did you so? MACBETH: Who can be wise, amazed, temperate and furious, Loyal and neutral, in a moment? No man. The expedition of my violent love Outrun the pauser reason. Here lay Duncan, His silver skin laced with his golden blood, And his gash'd stabs look'd like a breach in nature For ruin's wasteful entrance; there, the murtherers, Steep'd in the colors of their trade, their daggers Unmannerly breech'd with gore. Who could refrain, That had a heart to love, and in that heart Courage to make 's love known? LADY MACBETH: Help me hence, ho!",
         "play": "Macbeth",
         "act": 2,
-        "scene": 2,
-        "speaker": "MACBETH"
+        "scene": 3,
+        "scene_summary": "Duncan’s murder is discovered and suspicion begins to spread.",
+        "speakers": [
+          "MACBETH",
+          "MACDUFF",
+          "MALCOLM",
+          "LENNOX",
+          "LADY MACBETH"
+        ]
       }
     ]
   },
   {
     "query": "Who is Hamlet?",
     "answer": "[PLACEHOLDER ANSWER]\nConnect this function to your selected language model or API. Your final answer should use the retrieved context and should not invent unsupported details.",
+    "expected_focus": "",
+    "question_type": "",
+    "system": "",
     "retrieved_evidence": [
       {
         "rank": 1,
-        "score": 0.716,
-        "chunk_id": "hamlet_1_3_0026",
-        "text": "Laertes and Polonius warn Ophelia about Hamlet. I do not know, my lord, what I should think, Ophelia Polonius",
+        "score": 0.6712,
+        "chunk_id": "hamlet_2_2_event_0018",
+        "text": "Dialogue Text: ROSENCRANTZ: Then is the world one. HAMLET: A goodly one; in which there are many confines, wards, and dungeons, Denmark being one o' th' worst. ROSENCRANTZ: We think not so, my lord. HAMLET: Why, then 'tis none to you; for there is nothing either good or bad but thinking makes it so. To me it is a prison. ROSENCRANTZ: Why, then your ambition makes it one. 'Tis too narrow for your mind. HAMLET: O God, I could be bounded in a nutshell and count myself a king of infinite space, were it not that I have bad dreams. GUILDENSTERN: Which dreams indeed are ambition; for the very substance of the ambitious is merely the shadow of a dream. HAMLET: A dream itself is but a shadow.",
         "play": "Hamlet",
-        "act": 1,
-        "scene": 3,
-        "speaker": "OPHELIA"
+        "act": 2,
+        "scene": 2,
+        "scene_summary": "Rosencrantz and Guildenstern arrive; Hamlet plans to use players to test Claudius.",
+        "speakers": [
+          "ROSENCRANTZ",
+          "HAMLET",
+          "GUILDENSTERN"
+        ]
       },
       {
         "rank": 2,
-        "score": 0.7143,
-        "chunk_id": "hamlet_1_3_0004",
-        "text": "Laertes and Polonius warn Ophelia about Hamlet. Do you doubt that? Ophelia Polonius",
+        "score": 0.6659,
+        "chunk_id": "hamlet_2_2_event_0025",
+        "text": "Dialogue Text: GUILDENSTERN: In what, my dear lord? HAMLET: I am but mad north-north-west. When the wind is southerly I know a hawk from a handsaw. STAGE_DIRECTION: Enter Polonius. POLONIUS: Well be with you, gentlemen! HAMLET: Hark you, Guildenstern- and you too- at each ear a hearer! That great baby you see there is not yet out of his swaddling clouts. ROSENCRANTZ: Happily he's the second time come to them; for they say an old man is twice a child. HAMLET: I will prophesy he comes to tell me of the players. Mark it.- You say right, sir; a Monday morning; twas so indeed. POLONIUS: My lord, I have news to tell you.",
         "play": "Hamlet",
-        "act": 1,
-        "scene": 3,
-        "speaker": "OPHELIA"
+        "act": 2,
+        "scene": 2,
+        "scene_summary": "Rosencrantz and Guildenstern arrive; Hamlet plans to use players to test Claudius.",
+        "speakers": [
+          "GUILDENSTERN",
+          "HAMLET",
+          "POLONIUS",
+          "ROSENCRANTZ"
+        ]
       },
       {
         "rank": 3,
-        "score": 0.7086,
-        "chunk_id": "hamlet_1_3_0006",
-        "text": "Laertes and Polonius warn Ophelia about Hamlet. No more but so? Ophelia Polonius",
+        "score": 0.6649,
+        "chunk_id": "hamlet_1_2_event_0007",
+        "text": "Dialogue Text: HAMLET: Sir, my good friend- I'll change that name with you. And what make you from Wittenberg, Horatio? Marcellus? MARCELLUS: My good lord! HAMLET: I am very glad to see you.- [To Bernardo] Good even, sir.- But what, in faith, make you from Wittenberg? HORATIO: A truant disposition, good my lord. HAMLET: I would not hear your enemy say so, Nor shall you do my ear that violence To make it truster of your own report Against yourself. I know you are no truant. But what is your affair in Elsinore? We'll teach you to drink deep ere you depart. HORATIO: My lord, I came to see your father's funeral. HAMLET: I prithee do not mock me, fellow student. I think it was to see my mother's wedding. HORATIO: Indeed, my lord, it followed hard upon.",
         "play": "Hamlet",
         "act": 1,
-        "scene": 3,
-        "speaker": "OPHELIA"
+        "scene": 2,
+        "scene_summary": "Claudius addresses the court; Hamlet mourns and resents Gertrude’s remarriage.",
+        "speakers": [
+          "HAMLET",
+          "MARCELLUS",
+          "HORATIO"
+        ]
       }
     ]
   },
   {
     "query": "What is the conflict between the Montagues and the Capulets?",
     "answer": "[PLACEHOLDER ANSWER]\nConnect this function to your selected language model or API. Your final answer should use the retrieved context and should not invent unsupported details.",
+    "expected_focus": "",
+    "question_type": "",
+    "system": "",
     "retrieved_evidence": [
       {
         "rank": 1,
-        "score": 0.6224,
-        "chunk_id": "romeo_and_juliet_1_1_0054",
-        "text": "A street fight shows the feud; Romeo is lovesick for Rosaline. Down with the Capulets! Down with the Montagues! feud Romeo Rosaline",
+        "score": 0.5888,
+        "chunk_id": "romeo_and_juliet_1_1_event_0009",
+        "text": "Dialogue Text: BENVOLIO: I do but keep the peace. Put up thy sword, Or manage it to part these men with me. TYBALT: What, drawn, and talk of peace? I hate the word As I hate hell, all Montagues, and thee. Have at thee, coward! They fight. STAGE_DIRECTION: Enter an officer, and three or four Citizens with clubs or STAGE_DIRECTION: partisans. OFFICER: Clubs, bills, and partisans! Strike! beat them down! CITIZENS: Down with the Capulets! Down with the Montagues! STAGE_DIRECTION: Enter Old Capulet in his gown, and his Wife. CAPULET: What noise is this? Give me my long sword, ho!",
         "play": "Romeo and Juliet",
         "act": 1,
         "scene": 1,
-        "speaker": "CITIZENS"
+        "scene_summary": "A street fight shows the feud; Romeo is lovesick for Rosaline.",
+        "speakers": [
+          "BENVOLIO",
+          "TYBALT",
+          "OFFICER",
+          "CITIZENS",
+          "CAPULET"
+        ]
       },
       {
         "rank": 2,
-        "score": 0.5953,
-        "chunk_id": "romeo_and_juliet_1_1_0063",
-        "text": "A street fight shows the feud; Romeo is lovesick for Rosaline. Rebellious subjects, enemies to peace, Profaners of this neighbour-stained steel- Will they not hear? What, ho! you men, you beasts, That quench the fire of your pernicious rage With purple fountains issuing from your veins! On pain of torture, from those bloody hands Throw your mistempered weapons to the ground And hear the sentence of your moved prince. Three civil brawls, bred of an airy word By thee, old Capulet, and Montague, Have thrice disturb'd the quiet of our streets And made Verona's ancient citizens Cast by their grave beseeming ornaments To wield old partisans, in hands as old, Cank'red with peace, to part your cank'red hate. If ever you disturb our streets again, Your lives shall pay the forfeit of the peace. For this time all the rest depart away. You, Capulet, shall go along with me; And, Montague, come you this afternoon, To know our farther pleasure in this case, To old Freetown, our common judgment place. Once more, on pain of death, all men depart. feud Romeo Rosaline",
+        "score": 0.5847,
+        "chunk_id": "romeo_and_juliet_1_1_event_0010",
+        "text": "Dialogue Text: STAGE_DIRECTION: Enter Old Capulet in his gown, and his Wife. CAPULET: What noise is this? Give me my long sword, ho! WIFE: A crutch, a crutch! Why call you for a sword? CAPULET: My sword, I say! Old Montague is come And flourishes his blade in spite of me. STAGE_DIRECTION: Enter Old Montague and his Wife. MONTAGUE: Thou villain Capulet!- Hold me not, let me go. M: Wife. Thou shalt not stir one foot to seek a foe. STAGE_DIRECTION: Enter Prince Escalus, with his Train.",
         "play": "Romeo and Juliet",
         "act": 1,
         "scene": 1,
-        "speaker": "PRINCE"
+        "scene_summary": "A street fight shows the feud; Romeo is lovesick for Rosaline.",
+        "speakers": [
+          "CAPULET",
+          "WIFE",
+          "MONTAGUE",
+          "M"
+        ]
       },
       {
         "rank": 3,
-        "score": 0.5649,
-        "chunk_id": "romeo_and_juliet_1_5_0028",
-        "text": "Romeo and Juliet meet and fall in love before learning they are from enemy families. This, by his voice, should be a Montague. Fetch me my rapier, boy. What, dares the slave Come hither, cover'd with an antic face, To fleer and scorn at our solemnity? Now, by the stock and honour of my kin, To strike him dead I hold it not a sin. meeting love feud",
+        "score": 0.5352,
+        "chunk_id": "romeo_and_juliet_1_2",
+        "text": "Dialogue Text: [Enter Capulet, County Paris, and [Servant] -the Clown.] CAPULET. But Montague is bound as well as I, In penalty alike; and 'tis not hard, I think, For men so old as we to keep the peace. PAR. Of honourable reckoning are you both, And pity 'tis you liv'd at odds so long. But now, my lord, what say you to my suit? CAPULET. But saying o'er what I have said before: My child is yet a stranger in the world, She hath not seen the change of fourteen years; Let two more summers wither in their pride Ere we may think her ripe to be a bride. PAR. Younger than she are happy mothers made. CAPULET. And too soon marr'd are those so early made. The earth hath swallowed all my hopes but she; She is the hopeful lady of my earth. But woo her, gentle Paris, get her heart; My will to her consent is but a part. An she agree, within her scope of choice Lies my consent and fair according voice. This night I hold an old accustom'd feast, Whereto I have invited many a guest, Such as I love; and you among the store, One more, most welcome, makes my number more. At my poor house look to behold this night Earth-treading stars that make dark heaven light. Such comfort as do lusty young men feel When well apparell'd April on the heel Of limping Winter treads, even such delight Among fresh female buds shall you this night Inherit at my house. Hear all, all see, And like her most whose merit most shall be; Which, on more view of many, mine, being one, May stand in number, though in reck'ning none. Come, go with me. [To Servant, giving him a paper] Go, sirrah, trudge about Through fair Verona; find those persons out Whose names are written there, and to them say, My house and welcome on their pleasure stay- [Exeunt [Capulet and Paris].] SERV. Find them out whose names are written here? It is written that the shoemaker should meddle with his yard and the tailor with his last, the fisher with his pencil and the painter with his nets; but I am sent to find those persons whose names are here writ, and can never find what names the writing person hath here writ. I must to the learned. In good time! [Enter Benvolio and Romeo.] BENVOLIO. Tut, man, one fire burns out another's burning; One pain is lessened by another's anguish; Turn giddy, and be holp by backward turning; One desperate grief cures with another's languish. Take thou some new infection to thy eye, And the rank poison of the old will die. ROMEO. Your plantain leaf is excellent for that. BENVOLIO. For what, I pray thee? ROMEO. For your broken shin. BENVOLIO. Why, Romeo, art thou mad? ROMEO. Not mad, but bound more than a madman is; Shut up in prison, kept without my food, Whipp'd and tormented and- God-den, good fellow. SERV. God gi' go-den. I pray, sir, can you read? ROMEO. Ay, mine own fortune in my misery. SERV. Perhaps you have learned it without book. But I pray, can you read anything you see? ROMEO. Ay, If I know the letters and the language. SERV. Ye say honestly. Rest you merry! ROMEO. Stay, fellow; I can read. He reads. 'Signior Martino and his wife and daughters; County Anselmo and his beauteous sisters; The lady widow of Vitruvio; Signior Placentio and His lovely nieces; Mercutio and his brother Valentine; Mine uncle Capulet, his wife, and daughters; My fair niece Rosaline and Livia; Signior Valentio and his cousin Tybalt; Lucio and the lively Helena.' [Gives back the paper.] A fair assembly. Whither should they come? SERV. Up. ROMEO. Whither? SERV. To supper, to our house. ROMEO. Whose house? SERV. My master's. ROMEO. Indeed I should have ask'd you that before. SERV. Now I'll tell you without asking. My master is the great rich Capulet; and if you be not of the house of Montagues, I pray come and crush a cup of wine. Rest you merry! Exit. BENVOLIO. At this same ancient feast of Capulet's Sups the fair Rosaline whom thou so lov'st; With all the admired beauties of Verona. Go thither, and with unattainted eye Compare her face with some that I shall show, And I will make thee think thy swan a crow. ROMEO. When the devout religion of mine eye Maintains such falsehood, then turn tears to fires; And these, who, often drown'd, could never die, Transparent heretics, be burnt for liars! One fairer than my love? The all-seeing sun Ne'er saw her match since first the world begun. BENVOLIO. Tut! you saw her fair, none else being by, Herself pois'd with herself in either eye; But in that crystal scales let there be weigh'd Your lady's love against some other maid That I will show you shining at this feast, And she shall scant show well that now seems best. ROMEO. I'll go along, no such sight to be shown, But to rejoice in splendour of my own. [Exeunt.]",
         "play": "Romeo and Juliet",
         "act": 1,
-        "scene": 5,
-        "speaker": "TYBALT"
+        "scene": 2,
+        "scene_summary": "Paris asks to marry Juliet, while Romeo learns about the Capulet feast.",
+        "speakers": ""
       }
     ]
   },
   {
     "query": "Why does Hamlet delay taking revenge?",
     "answer": "[PLACEHOLDER ANSWER]\nConnect this function to your selected language model or API. Your final answer should use the retrieved context and should not invent unsupported details.",
+    "expected_focus": "",
+    "question_type": "",
+    "system": "",
     "retrieved_evidence": [
       {
         "rank": 1,
-        "score": 0.7188,
-        "chunk_id": "hamlet_4_4_0015",
-        "text": "Hamlet compares himself to Fortinbras and criticises his delay. Why, then the Polack never will defend it. Fortinbras delay",
+        "score": 0.6751,
+        "chunk_id": "hamlet_3_3_event_0008",
+        "text": "Dialogue Text: STAGE_DIRECTION: O wretched state! O bosom black as death! STAGE_DIRECTION: O limed soul, that, struggling to be free, STAGE_DIRECTION: Art more engag'd! Help, angels! Make assay. STAGE_DIRECTION: Bow, stubborn knees; and heart with strings of steel, STAGE_DIRECTION: Be soft as sinews of the new-born babe! STAGE_DIRECTION: All may be well. He kneels. STAGE_DIRECTION: Enter Hamlet. HAMLET: Now might I do it pat, now he is praying; And now I'll do't. And so he goes to heaven, And so am I reveng'd. That would be scann'd. A villain kills my father; and for that, I, his sole son, do this same villain send To heaven. Why, this is hire and salary, not revenge! He took my father grossly, full of bread, With all his crimes broad blown, as flush as May; And how his audit stands, who knows save heaven? But in our circumstance and course of thought, 'Tis heavy with him; and am I then reveng'd, To take him in the purging of his soul, When he is fit and seasoned for his passage? No. Up, sword, and know thou a more horrid hent. When he is drunk asleep; or in his rage; Or in th' incestuous pleasure of his bed; At gaming, swearing, or about some act That has no relish of salvation in't- Then trip him, that his heels may kick at heaven, And that his soul may be as damn'd and black As hell, whereto it goes. My mother stays. This physic but prolongs thy sickly days. Exit.",
         "play": "Hamlet",
-        "act": 4,
-        "scene": 4,
-        "speaker": "HAMLET"
+        "act": 3,
+        "scene": 3,
+        "scene_summary": "Hamlet finds Claudius praying but delays killing him.",
+        "speakers": [
+          "HAMLET"
+        ]
       },
       {
         "rank": 2,
-        "score": 0.697,
-        "chunk_id": "hamlet_4_4_0004",
-        "text": "Hamlet compares himself to Fortinbras and criticises his delay. Go softly on. Fortinbras delay",
+        "score": 0.6666,
+        "chunk_id": "hamlet_3_3_event_0009",
+        "text": "Dialogue Text: STAGE_DIRECTION: Enter Hamlet. HAMLET: Now might I do it pat, now he is praying; And now I'll do't. And so he goes to heaven, And so am I reveng'd. That would be scann'd. A villain kills my father; and for that, I, his sole son, do this same villain send To heaven. Why, this is hire and salary, not revenge! He took my father grossly, full of bread, With all his crimes broad blown, as flush as May; And how his audit stands, who knows save heaven? But in our circumstance and course of thought, 'Tis heavy with him; and am I then reveng'd, To take him in the purging of his soul, When he is fit and seasoned for his passage? No. Up, sword, and know thou a more horrid hent. When he is drunk asleep; or in his rage; Or in th' incestuous pleasure of his bed; At gaming, swearing, or about some act That has no relish of salvation in't- Then trip him, that his heels may kick at heaven, And that his soul may be as damn'd and black As hell, whereto it goes. My mother stays. This physic but prolongs thy sickly days. Exit. CLAUDIUS: [rises] My words fly up, my thoughts remain below. Words without thoughts never to heaven go. Exit.",
         "play": "Hamlet",
-        "act": 4,
-        "scene": 4,
-        "speaker": "FOR"
+        "act": 3,
+        "scene": 3,
+        "scene_summary": "Hamlet finds Claudius praying but delays killing him.",
+        "speakers": [
+          "HAMLET",
+          "CLAUDIUS"
+        ]
       },
       {
         "rank": 3,
-        "score": 0.6951,
-        "chunk_id": "hamlet_4_4_0011",
-        "text": "Hamlet compares himself to Fortinbras and criticises his delay. Who commands them, sir? Fortinbras delay",
+        "score": 0.6628,
+        "chunk_id": "hamlet_3_3_event_0006",
+        "text": "Dialogue Text: STAGE_DIRECTION: My crown, mine own ambition, and my queen. STAGE_DIRECTION: May one be pardon'd and retain th' offence? STAGE_DIRECTION: In the corrupted currents of this world STAGE_DIRECTION: Offence's gilded hand may shove by justice, STAGE_DIRECTION: And oft 'tis seen the wicked prize itself STAGE_DIRECTION: Buys out the law; but 'tis not so above. STAGE_DIRECTION: There is no shuffling; there the action lies STAGE_DIRECTION: In his true nature, and we ourselves compell'd,",
         "play": "Hamlet",
-        "act": 4,
-        "scene": 4,
-        "speaker": "HAMLET"
+        "act": 3,
+        "scene": 3,
+        "scene_summary": "Hamlet finds Claudius praying but delays killing him.",
+        "speakers": ""
       }
     ]
   },
   {
     "query": "Generate a short Shakespearean-style response from Juliet explaining her conflict after meeting Romeo.",
     "answer": "[PLACEHOLDER ANSWER]\nConnect this function to your selected language model or API. Your final answer should use the retrieved context and should not invent unsupported details.",
+    "expected_focus": "",
+    "question_type": "",
+    "system": "",
     "retrieved_evidence": [
       {
         "rank": 1,
-        "score": 0.6626,
-        "chunk_id": "romeo_and_juliet_2_4_0024",
-        "text": "Romeo arranges marriage plans through the Nurse. A most courteous exposition. Nurse message",
+        "score": 0.6888,
+        "chunk_id": "romeo_and_juliet_1_5_event_0009",
+        "text": "Dialogue Text: NURSE: Madam, your mother craves a word with you. ROMEO: What is her mother? NURSE: Marry, bachelor, Her mother is the lady of the house. And a good lady, and a wise and virtuous. I nurs'd her daughter that you talk'd withal. I tell you, he that can lay hold of her Shall have the chinks. ROMEO: Is she a Capulet? O dear account! my life is my foe's debt. BENVOLIO: Away, be gone; the sport is at the best. ROMEO: Ay, so I fear; the more is my unrest. CAPULET: Nay, gentlemen, prepare not to be gone; We have a trifling foolish banquet towards. Is it e'en so? Why then, I thank you all. I thank you, honest gentlemen. Good night. More torches here! [Exeunt Maskers.] Come on then, let's to bed. Ah, sirrah, by my fay, it waxes late; I'll to my rest. STAGE_DIRECTION: Exeunt [all but Juliet and Nurse].",
         "play": "Romeo and Juliet",
-        "act": 2,
-        "scene": 4,
-        "speaker": "ROMEO"
+        "act": 1,
+        "scene": 5,
+        "scene_summary": "Romeo and Juliet meet and fall in love before learning they are from enemy families.",
+        "speakers": [
+          "NURSE",
+          "ROMEO",
+          "BENVOLIO",
+          "CAPULET"
+        ]
       },
       {
         "rank": 2,
-        "score": 0.6545,
-        "chunk_id": "romeo_and_juliet_2_4_0080",
-        "text": "Romeo arranges marriage plans through the Nurse. I will tell her, sir, that you do protest, which, as I take it, is a gentlemanlike offer. Nurse message",
+        "score": 0.6648,
+        "chunk_id": "romeo_and_juliet_1_5_event_0010",
+        "text": "Dialogue Text: CAPULET: Nay, gentlemen, prepare not to be gone; We have a trifling foolish banquet towards. Is it e'en so? Why then, I thank you all. I thank you, honest gentlemen. Good night. More torches here! [Exeunt Maskers.] Come on then, let's to bed. Ah, sirrah, by my fay, it waxes late; I'll to my rest. STAGE_DIRECTION: Exeunt [all but Juliet and Nurse]. JULIET: Come hither, nurse. What is yond gentleman? NURSE: The son and heir of old Tiberio. JULIET: What's he that now is going out of door? NURSE: Marry, that, I think, be young Petruchio. JULIET: What's he that follows there, that would not dance? NURSE: I know not.",
         "play": "Romeo and Juliet",
-        "act": 2,
-        "scene": 4,
-        "speaker": "NURSE"
+        "act": 1,
+        "scene": 5,
+        "scene_summary": "Romeo and Juliet meet and fall in love before learning they are from enemy families.",
+        "speakers": [
+          "CAPULET",
+          "JULIET",
+          "NURSE"
+        ]
       },
       {
         "rank": 3,
-        "score": 0.649,
-        "chunk_id": "romeo_and_juliet_2_4_0045",
-        "text": "Romeo arranges marriage plans through the Nurse. O, thou art deceiv'd! I would have made it short; for I was come to the whole depth of my tale, and meant indeed to occupy the argument no longer. Nurse message",
+        "score": 0.6534,
+        "chunk_id": "romeo_and_juliet_1_5_event_0003",
+        "text": "Dialogue Text: STAGE_DIRECTION: 2. Serv. Ay, boy, ready. STAGE_DIRECTION: 1. Serv. You are look'd for and call'd for, ask'd for and STAGE_DIRECTION: sought STAGE_DIRECTION: for, in the great chamber. STAGE_DIRECTION: 3. Serv. We cannot be here and there too. Cheerly, boys! STAGE_DIRECTION: Be brisk awhile, and the longer liver take all. Exeunt. STAGE_DIRECTION: Enter the Maskers, Enter, [with Servants,] Capulet, his Wife, STAGE_DIRECTION: Juliet, Tybalt, and all the Guests",
         "play": "Romeo and Juliet",
-        "act": 2,
-        "scene": 4,
-        "speaker": "MERCUTIO"
+        "act": 1,
+        "scene": 5,
+        "scene_summary": "Romeo and Juliet meet and fall in love before learning they are from enemy families.",
+        "speakers": ""
       }
     ]
   }
