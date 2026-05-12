@@ -112,6 +112,35 @@ def filter_by_chunk_type(
         if r["chunk_type"] == chunk_type
     ]
 
+
+def load_all_processed_chunks() -> list:
+    """
+    Scan all .jsonl files in PROCESSED_DIR and return a unified list of chunks.
+    """
+    all_chunks = []
+
+    # Retrieve all files ending with .jsonl in the processed directory
+    jsonl_files = list(PROCESSED_DIR.glob("*.jsonl"))
+
+    if not jsonl_files:
+        print(f"Error: No .jsonl files found in {PROCESSED_DIR}")
+        return []
+
+    for file_path in jsonl_files:
+        print(f"Reading file: {file_path.name}")
+        with file_path.open("r", encoding="utf-8") as f:
+            count = 0
+            for line in f:
+                if line.strip():
+                    chunk_data = json.loads(line)
+                    all_chunks.append(chunk_data)
+                    count += 1
+            print(f"  Loaded {count} records from {file_path.name}")
+
+    print(f"\nLoading complete. Total chunks loaded: {len(all_chunks)}")
+    return all_chunks
+
+
 if __name__ == "__main__":
 
     folder = Path(PROCESSED_DIR)
