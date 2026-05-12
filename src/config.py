@@ -14,6 +14,7 @@ RAW_DIR = DATA_DIR/ "raw"
 INDEX_DIR = PROJECT_ROOT / "index"
 PROMPT_DIR = PROJECT_ROOT / "prompts"
 RESULTS_DIR = PROJECT_ROOT / "results"
+QUESTIONS_DIR = PROJECT_ROOT / "questions"
 
 PLAY_FILES = {
     "hamlet": RAW_DIR / "hamlet.json",
