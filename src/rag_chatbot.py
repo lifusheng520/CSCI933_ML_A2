@@ -13,7 +13,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Tuple
 
 from config import DEFAULT_TOP_K, EMBEDDING_MODEL_NAME, PROMPT_DIR, RESULTS_DIR
-from data_loader import load_all_plays
+from data_loader import load_all_processed_chunks
 from chunking import create_chunks, format_chunk_for_display
 from retrieval import EmbeddingRetriever
 
@@ -84,6 +84,9 @@ def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieve
     current_entry = {
         "query": query,
         "answer": answer,
+        "expected_focus": "",
+        "question_type": "",
+        "system": "",
         "retrieved_evidence": []
     }
 
@@ -92,6 +95,9 @@ def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieve
         print("-" * 80)
         print(f"Rank {rank} | Score: {score:.4f}")
         print(format_chunk_for_display(chunk))
+
+        # Checks for 'speakers' first, then 'speaker', defaults to ""
+        speaker_info = chunk.get("speakers") or chunk.get("speaker") or ""
 
         # construct json records
         evidence_item = {
@@ -102,7 +108,8 @@ def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieve
             "play": chunk["play"],
             "act": chunk["act"],
             "scene": chunk["scene"],
-            "speaker": chunk["speaker"]
+            "scene_summary": chunk["scene_summary"],
+            "speakers": speaker_info
         }
         current_entry["retrieved_evidence"].append(evidence_item)
 
@@ -120,11 +127,14 @@ def save_history(history: List[Dict], output_file: Any) -> None:
 
 
 def main() -> None:
-    records = load_all_plays()
-    chunks = create_chunks(records)
-
+    chunks = load_all_processed_chunks()
     retriever = EmbeddingRetriever(EMBEDDING_MODEL_NAME)
-    retriever.build_index(chunks)
+
+    if chunks:
+        retriever.build_index(chunks)
+        print("Index built successfully.")
+    else:
+        print("No valid data detected.")
 
     # make sure answers directory exists
     ANSWERS_DIR.mkdir(exist_ok=True)
