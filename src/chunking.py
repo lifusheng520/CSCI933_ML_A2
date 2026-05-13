@@ -49,10 +49,12 @@ def load_play_json(path: Path) -> Record:
       "scenes": [...]
     }
     """
+    path = path.with_name(path.stem + "_cleaned" + path.suffix)
+
     if not path.exists():
         raise FileNotFoundError(f"Missing input file: {path}")
 
-    with path.open("r", encoding="utf-8") as f:
+    with path.open("r", encoding="utf-8") as f:        
         data = json.load(f)
 
     if "scenes" not in data:
@@ -108,6 +110,7 @@ def scene_metadata(scene: Record) -> Record:
         "location": scene.get("location", ""),
         "scene_summary": scene.get("scene_summary", ""),
         "keywords": scene.get("keywords", []),
+        "original_scene_summary": scene.get("original_scene_summary", ""),
     }
 
 # BUILD TEXT
