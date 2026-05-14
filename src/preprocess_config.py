@@ -93,7 +93,7 @@ IMPROVED_MACBETH_SUMMARIES = {
     ),
 
     "macbeth_1_3": (
-        "he Three Witches's prophecy triger Macbeth's ambition, leading him to kill Duncan. "
+        "The Three Witches's prophecy triger Macbeth's ambition, leading him to kill Duncan. "
         "Macbeth and Banquo meet the Three Witches, who greet Macbeth as Thane of "
         "Glamis, Thane of Cawdor, and future king. The prophecy unsettles Macbeth, "
         "especially when Ross arrives to confirm he is now Thane of Cawdor. "
