@@ -1,7 +1,8 @@
 import json
 import re
 from collections import defaultdict
-from config import *
+from config import PLAY_FILES
+from preprocess_config import *
 
 # ----------------------------------------------------------------------
 # Specific corrections based on utterance_id or speaker
