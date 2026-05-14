@@ -28,5 +28,65 @@
     "question": "Generate a short Shakespearean-style response from Juliet explaining her conflict after meeting Romeo.",
     "expected_focus": "Creative stylised output; conflict between love for Romeo and family loyalty.",
     "type": "stylised_generation"
+  },
+  {
+    "question_id": "Q06",
+    "question": "Who is Romeo?",
+    "expected_focus": "A young man from the Montague family who is the main character and falls in love with Juliet.",
+    "type": "concept_explanation"
+  },
+  {
+    "question_id": "Q07",
+    "question": "Speak like the Ghost of Hamlet's father and tell Hamlet who killed you.",
+    "expected_focus": "Stylised output; simple ghostly tone identifying Claudius as the murderer.",
+    "type": "stylised_generation"
+  },
+  {
+    "question_id": "Q08",
+    "question": "Who are the three witches in Macbeth?",
+    "expected_focus": "Supernatural characters who tell Macbeth he will become king.",
+    "type": "concept_explanation"
+  },
+  {
+    "question_id": "Q09",
+    "question": "Where does Romeo meet Juliet for the first time?",
+    "expected_focus": "At a party hosted by the Capulet family.",
+    "type": "contextual_qa"
+  },
+  {
+    "question_id": "Q10",
+    "question": "Who is Lady Macbeth?",
+    "expected_focus": "Macbeth's wife who wants him to become king.",
+    "type": "concept_explanation"
+  },
+  {
+    "question_id": "Q11",
+    "question": "What does Hamlet see at night on the castle walls?",
+    "expected_focus": "The Ghost of his dead father.",
+    "type": "contextual_qa"
+  },
+  {
+    "question_id": "Q12",
+    "question": "Who is Tybalt?",
+    "expected_focus": "Juliet's cousin who enjoys fighting and hates the Montagues.",
+    "type": "concept_explanation"
+  },
+  {
+    "question_id": "Q13",
+    "question": "In what city does the story of Romeo and Juliet happen?",
+    "expected_focus": "Verona, Italy.",
+    "type": "contextual_qa"
+  },
+  {
+    "question_id": "Q14",
+    "question": "Pretend you are Macbeth and say one sentence about why you want to be King.",
+    "expected_focus": "Stylised output; expressing ambition or the desire for power in a simple royal tone.",
+    "type": "stylised_generation"
+  },
+  {
+    "question_id": "Q15",
+    "question": "Who is the King of Scotland at the start of Macbeth?",
+    "expected_focus": "King Duncan.",
+    "type": "contextual_qa"
   }
 ]
