@@ -20,14 +20,14 @@ class GemmaAssistant:
     def generate_answer(self, query, max_new_tokens=150):
 
         # Format the system prompt and query
-        system_rules = (
-            "You are a Shakespeare expert assistant.\n"
-            "Rules:\n"
-            "- Answer concisely, clearly and directly.\n"
-            "- Do NOT write scripts, dialogues, or plays.\n"
-            "- Keep answers short and factual.\n"
-            "- If unsure, say you don't know."
-        )
+        # system_rules = (
+        #     "You are a Shakespeare expert assistant.\n"
+        #     "Rules:\n"
+        #     "- Answer concisely, clearly and directly.\n"
+        #     "- Do NOT write scripts, dialogues, or plays.\n"
+        #     "- Keep answers short and factual.\n"
+        #     "- If unsure, say you don't know."
+        # )
 
         # for test
         # messages = [
@@ -53,9 +53,11 @@ class GemmaAssistant:
         outputs = self.model.generate(
             **inputs, 
             max_new_tokens=max_new_tokens,
-            do_sample=False,
-            pad_token_id=self.tokenizer.pad_token_id if self.tokenizer.pad_token_id is not None else self.tokenizer.eos_token_id,
-            eos_token_id=self.tokenizer.eos_token_id
+            do_sample=True,
+            temperature=0.7,
+            # pad_token_id=self.tokenizer.pad_token_id if self.tokenizer.pad_token_id is not None else self.tokenizer.eos_token_id,
+            pad_token_id=self.tokenizer.eos_token_id,
+            # eos_token_id=self.tokenizer.eos_token_id
         )
 
         # Decode only the newly generated tokens
@@ -94,8 +96,9 @@ class GemmaAssistant:
             **inputs, 
             max_new_tokens=max_new_tokens,
             do_sample=True,
-            temperature=0.7,
-            pad_token_id=self.tokenizer.eos_token_id
+            # temperature=0.7,
+            pad_token_id=self.tokenizer.eos_token_id,
+            eos_token_id=self.tokenizer.eos_token_id
         )
 
         # Decode only the newly generated tokens
