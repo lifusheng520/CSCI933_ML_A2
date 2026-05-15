@@ -34,6 +34,27 @@ DEFAULT_TOP_K = 3
 
 # Suggested lightweight embedding model.
 # Students may change this and justify the choice in the report.
-EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+# EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2" # small, super fast Top 133
+# EMBEDDING_MODEL_NAME = "sentence-transformers/all-mpnet-base-v2"  Top 110
+# EMBEDDING_MODEL_NAME = "intfloat/e5-base-v2" Top 97
+# EMBEDDING_MODEL_NAME = "nomic-ai/nomic-embed-text-v1" # larger, but extremely slow on cpu Top 81
+EMBEDDING_MODEL_NAME = "BAAI/bge-base-en-v1.5" # large, balanced Top 66
+# EMBEDDING_MODEL_NAME = "infgrad/Jasper-Token-Compression-600M" # Top 1 on MTEB Leaderboard 20260515,  but extremely slow on cpu
+# EMBEDDING_MODEL_NAME = "jinaai/jina-embeddings-v5-text-nano" # Top 16 on MTEB Leaderboard
+
+# Reranking
+# CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L12-v2"
 
 
+# Lauguage Model
+# LANGUAGE_MODEL_NAME = "google/gemma-3-270m-it"   # instruction-tuned version
+LANGUAGE_MODEL_NAME = "google/gemma-3-1b-it"   # instruction-tuned version
+# LANGUAGE_MODEL_NAME = "google/gemma-3-4b-it"   # instruction-tuned version
+
+
+# Chunk Type
+CHUNK_TYPE = "scenes"
+# CHUNK_TYPE = "events"
+# CHUNK_TYPE = "utterances"
+# CHUNK_TYPE = "hybrid"

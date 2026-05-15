@@ -8,11 +8,11 @@ from typing import Any, Dict, List, Tuple
 import json
 from collections import Counter
 
-from config import DEFAULT_TOP_K, EMBEDDING_MODEL_NAME, PROMPT_DIR, RESULTS_DIR, DATA_FILES
+from config import DEFAULT_TOP_K, EMBEDDING_MODEL_NAME, CROSS_ENCODER_MODEL, LANGUAGE_MODEL_NAME, PROMPT_DIR, RESULTS_DIR, DATA_FILES, CHUNK_TYPE
 from data_loader import Record, load_jsonl
 from chunking import format_chunk_for_display
 from retrieval import EmbeddingRetriever
-from baseline import baseline_answer
+# from baseline import baseline_answer
 from gemma_models import GemmaAssistant
 
 Chunk = Dict[str, Any]
@@ -49,7 +49,7 @@ def build_rag_prompt(query: str, retrieved: List[Tuple[Chunk, float]], prompt_ty
     for rank, (chunk, score) in enumerate(retrieved, start=1):
         play_names.append(chunk.get("play", ""))
         context_blocks.append(
-            f"[Context {rank} | similarity={score:.4f}]\n"
+            # f"[Context {rank} | similarity={score:.4f}]\n"
             f"{format_chunk_for_display(chunk)}"
         )
 
@@ -84,6 +84,9 @@ def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieve
     current_entry = {
         "query": query,
         "answer": answer,
+        "expected_focus": "",
+        "question_type": "",
+        "system": "",
         "retrieved_evidence": []
     }
 
@@ -92,6 +95,9 @@ def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieve
         print("-" * 80)
         print(f"Rank {rank} | Score: {score:.4f}")
         print(format_chunk_for_display(chunk))
+
+        # Checks for 'speakers' first, then 'speaker', defaults to ""
+        speaker_info = chunk.get("speakers") or chunk.get("speaker") or ""
 
         # construct json records
         evidence_item = {
@@ -102,7 +108,8 @@ def log_retrieval_results(history: List[Dict], query: str, answer: str, retrieve
             "play": chunk["play"],
             "act": chunk["act"],
             "scene": chunk["scene"],
-            # "speakers": chunk["speakers"] # scenes has no tag.
+            "scene_summary": chunk["scene_summary"],
+            "speakers": speaker_info
         }
         current_entry["retrieved_evidence"].append(evidence_item)
 
@@ -129,8 +136,13 @@ def main(assistant, chunk_type='events') -> None:
         chunks_events = load_dataset_by_chunk_type(chunk_type="events") # event level
     chunks = chunks_scenes + chunks_events
 
-    retriever = EmbeddingRetriever(EMBEDDING_MODEL_NAME)
-    retriever.build_index(chunks)
+    retriever = EmbeddingRetriever(EMBEDDING_MODEL_NAME, CROSS_ENCODER_MODEL)
+
+    if chunks:
+        retriever.build_index(chunks)
+        print("Index built successfully.")
+    else:
+        print("No valid data detected.")
 
     # make sure answers directory exists
     ANSWERS_DIR.mkdir(exist_ok=True)
@@ -153,6 +165,7 @@ def main(assistant, chunk_type='events') -> None:
 
         # Re-ranking
         retrieved = retriever.reranking(query, retrieved_t, top_k=DEFAULT_TOP_K)
+        # retrieved = retrieved_t
 
         # Detect stylised query by consine similarity
         is_stylised = retriever.is_stylized_query(query)
@@ -217,10 +230,6 @@ def load_dataset_by_chunk_type(chunk_type: str = "events") -> List[Record]:
 
 if __name__ == "__main__":
 
-    # model_name = "google/gemma-3-270m-it"   # instruction-tuned version
-    model_name = "google/gemma-3-1b-it"   # instruction-tuned version
-    # model_name = "google/gemma-3-4b-it"   # instruction-tuned version
-    assistant = GemmaAssistant(model_name)
-    # main(assistant, 'scenes')
-    # main(assistant, 'events')
-    main(assistant, 'hybrid') # hybrid chunks: scenes + hybrid
+
+    assistant = GemmaAssistant(LANGUAGE_MODEL_NAME)
+    main(assistant, CHUNK_TYPE)
