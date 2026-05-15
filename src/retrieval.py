@@ -12,6 +12,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Tuple
 from sentence_transformers import SentenceTransformer, CrossEncoder, util
+# import torch
+# from transformers import AutoModel
 
 import numpy as np
 import faiss 
@@ -25,7 +27,7 @@ class EmbeddingRetriever:
     Faiss-based embedding retriever.
     """
 
-    def __init__(self, embedding_model_name: str):
+    def __init__(self, embedding_model_name: str, cross_encoder_model: str):
         try:
             from sentence_transformers import SentenceTransformer
         except ImportError as exc:
@@ -34,11 +36,39 @@ class EmbeddingRetriever:
             ) from exc
 
         self.faiss = faiss
+
         # embedding
+        print(f"loading embedding model...{embedding_model_name}")
+        # for other models
         self.model = SentenceTransformer(embedding_model_name, device="cpu")
+
+        # for jasper
+        # self.model = SentenceTransformer(
+        #     embedding_model_name,
+        #     model_kwargs={
+        #         "torch_dtype": torch.bfloat16,
+        #         "attn_implementation": "sdpa",  # We support flash_attention_2; sdpa; eager
+        #         "trust_remote_code": True
+        #     },
+        #     trust_remote_code=True,
+        #     tokenizer_kwargs={"padding_side": "left"},
+        #     device="cpu",
+        # )
+
+        # for ninja
+        # self.model = AutoModel.from_pretrained(
+        #     embedding_model_name,
+        #     trust_remote_code=True,
+        #     _attn_implementation="flash_attention_2",  # Recommended but optional
+        #     dtype=torch.bfloat16,  # Recommended for GPUs
+        # )
+        # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # self.model = self.model.to(device=device)
+
         # reranking
+        print(f"loading cross-encoder model...{cross_encoder_model}")
         self.reranker = CrossEncoder(
-            "cross-encoder/ms-marco-MiniLM-L-6-v2"
+            cross_encoder_model
         )
 
         self.chunks: List[Chunk] = []
@@ -163,16 +193,23 @@ class EmbeddingRetriever:
             for chunk in chunks
         ]
 
+        # for others
         embeddings = self.model.encode(
             retrieval_texts,
             show_progress_bar=True,
             batch_size=32,
             convert_to_numpy=True,
-            device="cpu"
+            device="cpu",
+            normalize_embeddings=True
         )
 
-        # Normalize embeddings → cosine similarity via inner product
-        faiss.normalize_L2(embeddings)
+        # for ninja
+        # embeddings = self.model.encode(
+        #     texts=retrieval_texts,
+        #     task="retrieval",
+        #     prompt_name="query",
+        # )
+        # faiss.normalize_L2(embeddings)         # Normalize embeddings → cosine similarity via inner product
 
         self.embeddings = embeddings
 
@@ -191,14 +228,25 @@ class EmbeddingRetriever:
         if self.index is None:
             raise RuntimeError("Index not built. Call build_index() first.")
 
-        query_embedding = np.array(self.model.encode([query]))
-        self.faiss.normalize_L2(query_embedding)
+        # for bge
+        instruction = "Represent this sentence for searching relevant passages:" # BGE embedding instruction
+        query_embedding = np.array(self.model.encode(
+            [instruction + query], 
+            normalize_embeddings=True))
+        
+        # for ninja
+        # query_embedding = self.model.encode(
+        #     texts=query,
+        #     task="retrieval",
+        #     prompt_name="query",
+        # )
+        # self.faiss.normalize_L2(query_embedding)
 
         scores, indices = self.index.search(query_embedding, top_k)
 
         results = []
         for idx, score in zip(indices[0], scores[0]):
-            chunk = self.chunks[idx]
+            chunk = self.chunks[idx].copy()
             # Remove redundant information
             chunk['text'] = 'Dialogue Text: ' + self._get_text(chunk)
             # IMPORTANT: keep evidence structured for RAG report
@@ -276,7 +324,8 @@ class EmbeddingRetriever:
         # Encode query
         query_embedding = self.model.encode(
             [query],
-            convert_to_numpy=True
+            convert_to_numpy=True,
+            normalize_embeddings=True
         )
 
         # Cosine similarity
