@@ -43,11 +43,14 @@ EMBEDDING_MODEL_NAME = "BAAI/bge-base-en-v1.5" # large, balanced Top 66
 # EMBEDDING_MODEL_NAME = "jinaai/jina-embeddings-v5-text-nano" # Top 16 on MTEB Leaderboard
 
 # Reranking
-# CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
-CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L12-v2"
+CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+# CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L12-v2"
 
 
 # Lauguage Model
+# LANGUAGE_MODEL_NAME = "distilgpt2"
+# LANGUAGE_MODEL_NAME = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+# LANGUAGE_MODEL_NAME = "microsoft/phi-2"
 # LANGUAGE_MODEL_NAME = "google/gemma-3-270m-it"   # instruction-tuned version
 LANGUAGE_MODEL_NAME = "google/gemma-3-1b-it"   # instruction-tuned version
 # LANGUAGE_MODEL_NAME = "google/gemma-3-4b-it"   # instruction-tuned version

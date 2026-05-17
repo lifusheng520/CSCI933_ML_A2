@@ -10,13 +10,17 @@ or another approved method, but must justify the design in the report.
 
 from __future__ import annotations
 
+import pickle
+from pathlib import Path
+import numpy as np
+import faiss 
+import hashlib
+import json
+
 from typing import Any, Dict, List, Tuple
 from sentence_transformers import SentenceTransformer, CrossEncoder, util
 # import torch
 # from transformers import AutoModel
-
-import numpy as np
-import faiss 
 
 
 Chunk = Dict[str, Any]
@@ -34,6 +38,14 @@ class EmbeddingRetriever:
             raise ImportError(
                 "Install sentence-transformers: pip install sentence-transformers"
             ) from exc
+        
+        # cache
+        self.cache_dir = Path("cache")
+        self.cache_dir.mkdir(exist_ok=True)
+
+        self.embedding_cache_path = self.cache_dir / f"embeddings_{embedding_model_name.replace('/', '_')}.pkl"
+        self.faiss_cache_path = self.cache_dir / f"faiss_{embedding_model_name.replace('/', '_')}.index"
+        self.meta_cache_path = self.cache_dir / f"chunks_{embedding_model_name.replace('/', '_')}.pkl"        
 
         self.faiss = faiss
 
@@ -130,6 +142,53 @@ class EmbeddingRetriever:
             normalize_embeddings=True
         )
 
+    def save_cache(self) -> None:
+        """
+        Save embeddings, FAISS index, and chunks to disk.
+        """
+
+        if self.index is None or self.embeddings is None:
+            raise RuntimeError("Nothing to cache. Build index first.")
+
+        # Save FAISS index
+        faiss.write_index(self.index, str(self.faiss_cache_path))
+
+        # Save embeddings + chunks + model info
+        with open(self.embedding_cache_path, "wb") as f:
+            pickle.dump(self.embeddings, f)
+
+        with open(self.meta_cache_path, "wb") as f:
+            pickle.dump(self.chunks, f)
+
+        print("Cache saved successfully.")
+
+    def load_cache(self) -> bool:
+        """
+        Load FAISS index + embeddings if available.
+        Returns True if cache loaded successfully.
+        """
+
+        if not (
+            self.faiss_cache_path.exists()
+            and self.embedding_cache_path.exists()
+            and self.meta_cache_path.exists()
+        ):
+            return False
+
+        # Load FAISS index
+        self.index = faiss.read_index(str(self.faiss_cache_path))
+
+        # Load embeddings
+        with open(self.embedding_cache_path, "rb") as f:
+            self.embeddings = pickle.load(f)
+
+        # Load chunks
+        with open(self.meta_cache_path, "rb") as f:
+            self.chunks = pickle.load(f)
+
+        print("Cache loaded successfully.")
+        return True        
+
     def _get_text(self, chunk):
 
         import re
@@ -174,16 +233,32 @@ class EmbeddingRetriever:
 
         # {self._get_text(chunk)[:300]}
 
-
     def build_index(self, chunks: List[Chunk]) -> None:
         """
         Create FAISS index from embeddings.
+        Save and load cache.
         """
         if not chunks:
             raise ValueError("No chunks supplied to build_index().")
-
-        self.chunks = chunks
         
+        print("Checking cache...")
+
+        if self.cache_is_valid(chunks):
+            print("Cache is valid. Loading index from disk...")
+
+            loaded = self.load_cache()
+
+            if loaded:
+                print("✅ Cache loaded successfully.")
+                return
+
+            print("⚠️ Cache validation passed but loading failed. Rebuilding...")
+
+        else:
+            print("Building index...")    
+        
+        self.chunks = chunks
+
         # indexing by texts
         # retrieval_texts = [chunk["text"] for chunk in chunks]
 
@@ -219,7 +294,57 @@ class EmbeddingRetriever:
         self.index = self.faiss.IndexFlatIP(dim)
         self.index.add(embeddings)
 
-        print(f"Indexed {len(chunks)} chunks.")
+        # save everything
+        self.save_cache()
+        self.save_manifest(self._compute_dataset_hash(chunks))     
+
+        print(f"Indexed and cached {len(chunks)} chunks.")
+
+    def _compute_dataset_hash(self, chunks: List[Chunk]) -> str:
+        """
+        Compute a deterministic hash for the dataset used in FAISS indexing.
+        """
+
+        normalized = []
+
+        for c in chunks:
+            normalized.append({
+                "play": c.get("play", ""),
+                "act": c.get("act", ""),
+                "scene": c.get("scene", ""),
+                "text": c.get("text", ""),
+                "scene_summary": c.get("scene_summary", "")
+            })
+
+        # ensure stable ordering
+        serialized = json.dumps(normalized, sort_keys=True).encode("utf-8")
+
+        return hashlib.sha256(serialized).hexdigest()
+
+    def cache_is_valid(self, chunks: List[Chunk]) -> bool:
+        expected_hash = self._compute_dataset_hash(chunks)
+
+        manifest_path = self.cache_dir / "manifest.json"
+
+        if not manifest_path.exists():
+            return False
+
+        with open(manifest_path, "r") as f:
+            meta = json.load(f)
+
+        return meta.get("dataset_hash") == expected_hash
+    
+    def save_manifest(self, dataset_hash: str) -> None:
+        manifest_path = self.cache_dir / "manifest.json"
+
+        meta = {
+            "dataset_hash": dataset_hash,
+            "embedding_model": str(self.model),
+            "num_chunks": len(self.chunks)
+        }
+
+        with open(manifest_path, "w") as f:
+            json.dump(meta, f, indent=2)
 
     def retrieve(self, query: str, top_k: int = 20) -> List[Tuple[Chunk, float]]:
         """

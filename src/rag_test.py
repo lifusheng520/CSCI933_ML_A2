@@ -11,9 +11,9 @@ from collections import Counter
 from config import DEFAULT_TOP_K, EMBEDDING_MODEL_NAME, CROSS_ENCODER_MODEL, LANGUAGE_MODEL_NAME, PROMPT_DIR, RESULTS_DIR, DATA_FILES, CHUNK_TYPE
 from data_loader import Record, load_jsonl
 from chunking import format_chunk_for_display
+from gemma_models import GemmaAssistant
 from retrieval import EmbeddingRetriever
 # from baseline import baseline_answer
-from gemma_models import GemmaAssistant
 
 Chunk = Dict[str, Any]
 ANSWERS_DIR = RESULTS_DIR / "answers"
@@ -126,23 +126,28 @@ def save_history(history: List[Dict], output_file: Any) -> None:
     print(f"All records has been saved as {output_file}")
 
 def main(assistant, chunk_type='events') -> None:
+    
+    # init retriever
+    retriever = EmbeddingRetriever(EMBEDDING_MODEL_NAME, CROSS_ENCODER_MODEL)
 
     # load chunk datasets
     chunks_scenes = []
     chunks_events = []
+    chunks_utterances = []
     if chunk_type == 'hybrid' or chunk_type == 'scenes':
         chunks_scenes = load_dataset_by_chunk_type(chunk_type="scenes") # scene level
     if chunk_type == 'hybrid' or chunk_type == 'events':    
         chunks_events = load_dataset_by_chunk_type(chunk_type="events") # event level
-    chunks = chunks_scenes + chunks_events
+    if chunk_type == 'hybrid' or chunk_type == 'utterances':
+        chunks_utterances = load_dataset_by_chunk_type(chunk_type="utterances") # utterance level
+    chunks = chunks_scenes + chunks_events + chunks_utterances
 
-    retriever = EmbeddingRetriever(EMBEDDING_MODEL_NAME, CROSS_ENCODER_MODEL)
-
-    if chunks:
-        retriever.build_index(chunks)
-        print("Index built successfully.")
-    else:
+    if not chunks:
         print("No valid data detected.")
+        return
+
+    # buid indexing or load/save cache
+    retriever.build_index(chunks)
 
     # make sure answers directory exists
     ANSWERS_DIR.mkdir(exist_ok=True)
@@ -229,7 +234,6 @@ def load_dataset_by_chunk_type(chunk_type: str = "events") -> List[Record]:
     return all_records
 
 if __name__ == "__main__":
-
 
     assistant = GemmaAssistant(LANGUAGE_MODEL_NAME)
     main(assistant, CHUNK_TYPE)
