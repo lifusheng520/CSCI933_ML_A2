@@ -43,7 +43,7 @@ EMBEDDING_MODEL_NAME = "BAAI/bge-base-en-v1.5" # large, balanced Top 66
 # EMBEDDING_MODEL_NAME = "jinaai/jina-embeddings-v5-text-nano" # Top 16 on MTEB Leaderboard
 
 # Reranking
-CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L6-v2"
 # CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L12-v2"
 
 

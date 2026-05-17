@@ -100,4 +100,4 @@ def create_evaluation_template(input) -> None:
 
 
 if __name__ == "__main__":
-    create_evaluation_template("../results/answers/retrieval_history.json")
+    create_evaluation_template(f"{RESULTS_DIR}/answers/retrieval_history.json")
